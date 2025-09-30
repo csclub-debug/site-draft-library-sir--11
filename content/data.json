@@ -1,68 +1,68 @@
 {
   "announcements": [
-	{
-	  "title": "Hjkkl",
-	  "date": "2025-09-28T16:47:00.000+05:30",
-	  "body": "Hello"
-	}
+    {
+      "title": "shoaib bhai has fever so he will not attend in todays work",
+      "date": "2025-09-30T08:20:00.000-07:00",
+      "body": "hello world"
+    }
   ],
   "staff": [
-	{
-	  "name": "Dr. A. B. Librarian",
-	  "role": "Librarian",
-	  "image": "/images/uploads/dr-a-b-librarian.jpg", 
-	  "email": "librarian@example.edu",
-	  "phone": ""
-	},
-	{
-	  "name": "Ms. C. D. Assistant",
-	  "role": "Assistant Librarian",
-	  "image": "/images/uploads/ms-c-d-assistant.jpg",
-	  "email": "assistant@example.edu",
-	  "phone": ""
-	}
+    {
+      "name": "Dr. shoaib",
+      "role": "Librarian",
+      "image": "/images/uploads/screenshot-2025-07-29-070031.png",
+      "email": "librarian@example.edu",
+      "phone": ""
+    },
+    {
+      "name": "Ms. C. D. Assistant",
+      "role": "Assistant Librarian",
+      "image": "/images/uploads/ms-c-d-assistant.jpg",
+      "email": "assistant@example.edu",
+      "phone": ""
+    }
   ],
   "books": [
-	{
-	  "title": "Introduction to Physics",
-	  "author": "J. Doe",
-	  "category": "Physics",
-	  "year": "2019"
-	},
-	{
-	  "title": "Organic Chemistry Basics",
-	  "author": "R. Roe",
-	  "category": "Chemistry",
-	  "year": "2020"
-	}
+    {
+      "title": "Introduction to Physics",
+      "author": "J. Doe",
+      "category": "Physics",
+      "year": "2019"
+    },
+    {
+      "title": "Organic Chemistry Basics",
+      "author": "R. Roe",
+      "category": "Chemistry",
+      "year": "2020"
+    }
   ],
   "eresources": [
-	{
-	  "title": "JSTOR",
-	  "link": "https://www.jstor.org/",
-	  "description": "Academic journals and books."
-	},
-	{
-	  "title": "Google Scholar",
-	  "link": "https://scholar.google.com/",
-	  "description": "Search scholarly literature."
-	}
+    {
+      "title": "JSTOR",
+      "link": "https://www.jstor.org/",
+      "description": "Academic journals and books."
+    },
+    {
+      "title": "Google Scholar",
+      "link": "https://scholar.google.com/",
+      "description": "Search scholarly literature."
+    }
   ],
   "research_sites": [
-	{
-	  "name": "Google Gemini",
-	  "tagline": "AI Assistant for powerful research and summarization.",
-	  "link": "https://gemini.google.com/"
-	},
-	{
-	  "name": "ResearchGate",
-	  "tagline": "Connect with researchers and access publications.",
-	  "link": "https://www.researchgate.net/"
-	},
-	{
-	  "name": "ScienceDirect",
-	  "tagline": "Full-text scientific, technical, and medical content.",
-	  "link": "https://www.sciencedirect.com/"
-	}
+    {
+      "name": "Google Gemini",
+      "tagline": "AI Assistant for powerful research and summarization.netlify",
+      "link": "https://https://www.netlify.com//"
+    },
+    {
+      "name": "ResearchGate",
+      "tagline": "Connect with researchers and access publications.",
+      "link": "https://www.researchgate.net/"
+    },
+    {
+      "name": "ScienceDirect",
+      "tagline": "Full-text scientific, technical, and medical content.",
+      "link": "https://www.sciencedirect.com/"
+    }
   ]
 }
