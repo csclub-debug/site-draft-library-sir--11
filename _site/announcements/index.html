@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width,initial-scale=1'>
+    <title>Announcements - Sir M V Library</title>
+    <link rel='stylesheet' href='assets/style.css'>
+    <style>
+        /* CSS for dynamic Announcements and Accordion Style */
+        .container-announcements {
+            max-width: 900px; /* Constrain width for readability */
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .accordion {
+            padding: 0 15px; /* Add some horizontal padding */
+        }
+        
+        /* Container for scrollability and premium look */
+        .acc-items {
+            max-height: 80vh; /* Limits height, forcing scrollbar on overflow */
+            overflow-y: auto; /* Enables vertical scrolling */
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05); /* Soft shadow for premium feel */
+            background-color: #ffffff; /* Light background for the list */
+        }
+        
+        /* Individual Announcement Card/Item */
+        .announcement-item {
+            border-bottom: 1px solid var(--border-color, #eee);
+        }
+        .announcement-item:last-child {
+            border-bottom: none;
+        }
+
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 20px;
+            cursor: pointer;
+            background-color: var(--light-bg, #f9f9f9);
+            transition: background-color 0.3s;
+        }
+
+        .accordion-header:hover {
+            background-color: var(--hover-bg, #f0f0f0);
+        }
+
+        .accordion-title {
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--text-color, #333);
+            flex-grow: 1;
+            margin-right: 20px;
+        }
+
+        .accordion-date {
+            font-size: 0.9rem;
+            color: var(--muted, #6c757d);
+            white-space: nowrap; /* Keep the date on one line */
+        }
+
+        .accordion-toggle-icon {
+            margin-left: 15px;
+            font-size: 1.2rem;
+            color: var(--primary-color, #007bff);
+            transition: transform 0.3s ease;
+        }
+
+        /* Content Body (initially hidden) */
+        .accordion-content {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+            background-color: #ffffff;
+        }
+        
+        .accordion-content-inner {
+            padding: 10px 0 20px 0;
+            line-height: 1.6;
+            color: var(--text-color, #333);
+        }
+
+        /* Active State (for JS) */
+        .announcement-item.active .accordion-content {
+            max-height: 500px; /* Sufficiently large height to reveal content */
+            transition: max-height 0.4s ease-in, padding 0.4s ease-in;
+        }
+        .announcement-item.active .accordion-toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Ensure responsiveness */
+        @media (max-width: 600px) {
+            .accordion-header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding-right: 50px; /* Space for the icon */
+            }
+            .accordion-title {
+                margin-right: 0;
+                margin-bottom: 5px;
+                font-size: 1.05rem;
+            }
+            .accordion-date {
+                font-size: 0.85rem;
+            }
+            .accordion-toggle-icon {
+                position: absolute;
+                right: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+            .accordion-header {
+                position: relative;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="navbar-wrap">
+    <div class="navbar" role="navigation" aria-label="Main">
+        <div class="brand"><img class="logo" src="logo.svg" alt="logo"><div><div class="title">Sir M V Science College</div><div style="font-size:12px;color:var(--muted)">Library & Informatics Centre</div></div></div>
+        <button class="hamburger" aria-label="Open menu">☰</button>
+        <div class="nav" role="menubar">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="question-papers.html">Question Papers</a>
+            <a href="staff.html">Staff</a>
+            <a href="announcements.html">Announcements</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </div>
+</div>
+<div class="drawer-backdrop" aria-hidden="true"></div>
+<div class="drawer" aria-hidden="true">
+    <div class="drawer-menu">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="question-papers.html">Question Papers</a>
+        <a href="staff.html">Staff</a>
+        <a href="announcements.html">Announcements</a>
+        <a href="contact.html">Contact</a>
+        <div style="margin-top:12px"><a class="email-btn" href="mailto:sirmvsciencebdvt@gmail.com">Email: sirmvsciencebdvt@gmail.com</a></div>
+    </div>
+</div>
+<div class="header-spacer"></div>
+
+<section class="section container container-announcements">
+    <h1 style="margin-top:0">Announcements</h1>
+    
+    <div id="announcements-container" class="acc-items">
+        <div style="text-align: center; padding: 40px; color: var(--muted);">Loading announcements...</div>
+    </div>
+</section>
+
+<div class="footer-pad"></div>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="inner">
+      <div style="display:flex;gap:12px;align-items:center">
+        <img src="logo.svg" alt="logo" style="height:44px;width:44px;border-radius:8px">
+        <div>
+          <div style="font-weight:700">Sir M V Science College Library</div>
+          <div style="font-size:13px;color:#9aa4b2">Library & Informatics Centre</div>
+        </div>
+      </div>
+
+      <div style="color:#9aa4b2;font-size:14px">Sir. M.V. Government Science College, Bommanakatte, Bhadravathi - 577302</div>
+
+      <div style="display:flex;gap:12px;align-items:center">
+        <a class="social-btn fb" href="" target="_blank" aria-label="Facebook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 12.07C22 6.48 17.52 2 11.93 2S2 6.48 2 12.07C2 17.09 5.64 21.26 10.36 22v-7.02H7.9v-2.92h2.46v-2.22c0-2.44 1.46-3.79 3.6-3.79 1.04 0 2.12.18 2.12.18v2.33h-1.19c-1.17 0-1.54.73-1.54 1.48v1.98h2.62l-.42 2.92h-2.2V22C18.36 21.26 22 17.09 22 12.07z" fill="white"/></svg>
+        </a>
+
+        <a class="social-btn ig" href="" target="_blank" aria-label="Instagram">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm5 6.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9zm6.5-.5a1 1 0 11-2 0 1 1 0 012 0z" fill="white"/></svg>
+        </a>
+
+        <a class="social-btn tw" href="" target="_blank" aria-label="Twitter">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 5.92c-.63.28-1.3.47-2.01.56.72-.43 1.27-1.12 1.53-1.94-.68.4-1.43.7-2.23.86A3.49 3.49 0 0016.5 4c-1.93 0-3.5 1.6-3.5 3.57 0 .28.03.55.09.81-2.91-.15-5.49-1.58-7.21-3.75-.3.5-.47 1.08-.47 1.69 0 1.16.61 2.19 1.54 2.79-.56-.02-1.09-.18-1.55-.42v.04c0 1.64 1.15 3.01 2.67 3.33-.28.07-.58.11-.88.11-.21 0-.42-.02-.62-.06.42 1.31 1.66 2.26 3.13 2.29A6.98 6.98 0 012 19.54a9.8 9.8 0 005.29 1.56c6.35 0 9.83-5.6 9.83-10.46v-.48c.68-.5 1.27-1.12 1.74-1.83-.63.28-1.3.47-2.01.56z" fill="white"/></svg>
+        </a>
+
+        <a class="email-btn" href="mailto:" aria-label="Email">Email Us</a>
+      </div>
+    </div>
+  </footer>
+
+
+
+<script src='assets/main.js'></script>
+<script>
+/**
+ * Dynamic Content Injection and Accordion Logic (Client-Side)
+ * Reads announcements from content/data.json and renders them.
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('announcements-container');
+    const jsonPath = 'content/data.json'; // Path to your data file
+
+    // Helper function to format the ISO date
+    const formatDate = (isoString) => {
+        if (!isoString) return 'No Date';
+        const date = new Date(isoString);
+        // Fallback for browsers that don't support custom formats easily
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+    };
+
+    // 1. Fetch the data
+    fetch(jsonPath)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const announcements = data.announcements;
+            container.innerHTML = ''; // Clear the "Loading" message
+
+            if (!announcements || announcements.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--muted);">No announcements available at this time.</div>';
+                return;
+            }
+
+            // Reverse the array to show the newest (last added) first
+            announcements.slice().reverse().forEach((item, index) => {
+                const dateString = formatDate(item.date);
+                
+                // 2. Create the HTML elements
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('announcement-item');
+                
+                // Header (Clickable part)
+                const header = document.createElement('div');
+                header.classList.add('accordion-header');
+                header.setAttribute('role', 'button');
+                header.setAttribute('aria-expanded', 'false');
+                header.setAttribute('tabindex', '0');
+                
+                header.innerHTML = `
+                    <div class="accordion-title">${item.title}</div>
+                    <div class="accordion-date">Posted: ${dateString}</div>
+                    <div class="accordion-toggle-icon">▼</div>
+                `;
+                
+                // Content Body (Initially hidden)
+                const content = document.createElement('div');
+                content.classList.add('accordion-content');
+                
+                // Note: We use innerHTML = item.body because CMS content can contain HTML/markdown converted to HTML.
+                content.innerHTML = `<div class="accordion-content-inner">${item.body}</div>`;
+
+                // 3. Append to container
+                itemDiv.appendChild(header);
+                itemDiv.appendChild(content);
+                container.appendChild(itemDiv);
+
+                // 4. Add Accordion interactivity (on the header)
+                header.addEventListener('click', () => {
+                    // Close other active items (optional: remove this to allow multiple open)
+                    document.querySelectorAll('.announcement-item.active').forEach(activeItem => {
+                        if (activeItem !== itemDiv) {
+                            activeItem.classList.remove('active');
+                            activeItem.querySelector('.accordion-header').setAttribute('aria-expanded', 'false');
+                        }
+                    });
+
+                    // Toggle current item
+                    itemDiv.classList.toggle('active');
+                    const isExpanded = itemDiv.classList.contains('active');
+                    header.setAttribute('aria-expanded', isExpanded);
+                });
+            });
+
+        })
+        .catch(e => {
+            console.error('Error fetching announcements:', e);
+            container.innerHTML = '<div style="text-align: center; padding: 40px; color: red;">Failed to load announcements. Please check data file path.</div>';
+        });
+
+});
+</script>
+</body>
+</html>

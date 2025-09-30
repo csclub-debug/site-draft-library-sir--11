@@ -1,0 +1,33 @@
+[
+  {
+    "department": "B.Sc Physics",
+    "tagline": "A collection of last three years' core paper questions.",
+    "papers": [
+      {"title": "B.Sc Physics - Electricity and Magnetism - 2024", "link": "/uploads/qps/bsc-phys-em-2024.pdf"},
+      {"title": "B.Sc Physics - Quantum Mechanics - 2023", "link": "/uploads/qps/bsc-phys-qm-2023.pdf"}
+    ]
+  },
+  {
+    "department": "BCA",
+    "tagline": "Previous year papers for Object-Oriented Programming and Data Structures.",
+    "papers": [
+      {"title": "BCA - OOP with Java - 2024", "link": "/uploads/qps/bca-oop-2024.pdf"},
+      {"title": "BCA - Data Structures - 2023", "link": "/uploads/qps/bca-ds-2023.pdf"}
+    ]
+  },
+  {
+    "department": "B.Sc Chemistry",
+    "tagline": "Organic and Inorganic Chemistry past exam papers.",
+    "papers": [
+      {"title": "B.Sc Chemistry - Organic Chemistry - 2024", "link": "/uploads/qps/bsc-chem-org-2024.pdf"},
+      {"title": "B.Sc Chemistry - Inorganic Chemistry - 2023", "link": "/uploads/qps/bsc-chem-inorg-2023.pdf"}
+    ]
+  },
+  {
+    "department": "B.Sc Zoology",
+    "tagline": "Cell Biology and Genetics previous questions.",
+    "papers": [
+      {"title": "B.Sc Zoology - Cell Biology - 2024", "link": "/uploads/qps/bsc-zoo-cell-2024.pdf"}
+    ]
+  }
+]

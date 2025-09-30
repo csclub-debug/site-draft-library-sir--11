@@ -1,0 +1,12 @@
+{
+  "books": [
+    {
+      "accession_no": "C1001",
+      "title": "Introduction to Computer Science",
+      "author": "J. P. Smith",
+      "subject": "BCA",
+      "publisher": "TechBooks Publishing"
+    }
+    
+  ]
+}

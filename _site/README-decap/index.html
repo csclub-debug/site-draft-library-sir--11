@@ -1,0 +1,38 @@
+<p>Library site — Decap CMS ready (automatically generated)</p>
+<p>What I changed</p>
+<ul>
+<li>Created <code>/content/data.json</code> which holds announcements, staff, books and e-resources data.</li>
+<li>Added <code>/admin/index.html</code> and <code>/admin/config.yml</code> (Decap CMS) configured to edit <code>content/data.json</code> via a file collection.</li>
+<li>Modified pages (announcements.html, staff.html, books.html, e-resources.html, notes.html, question-papers.html) to load content from <code>/content/data.json</code> dynamically using <code>main.js</code>.</li>
+<li>Kept styling and other assets intact.</li>
+</ul>
+<p>How to deploy on Netlify (summary)</p>
+<ol>
+<li>
+<p>Create a GitHub repository and push the contents of this folder (recommended branch: main).
+git init
+git add .
+git commit -m &quot;Initial site with Decap CMS support&quot;
+git branch -M main
+git remote add origin https://github.com/YOURUSERNAME/YOURREPO.git
+git push -u origin main</p>
+</li>
+<li>
+<p>On Netlify: Create a new site -&gt; Git -&gt; Connect to GitHub -&gt; choose your repo -&gt; Deploy site (no build command required if this is pure static HTML; publish directory is the repo root).</p>
+</li>
+<li>
+<p>In Netlify site settings -&gt; Identity: Enable Identity service. Under Services, enable Git Gateway (this will allow the CMS to write to the GitHub repo).</p>
+</li>
+<li>
+<p>Under Deploys -&gt; Build &amp; deploy, ensure branch is 'main' (or whatever you used).</p>
+</li>
+<li>
+<p>Visit https://YOUR-SITE.netlify.app/admin/ to open the CMS. Sign up / invite users via Netlify Identity and log in to edit content.</p>
+</li>
+</ol>
+<p>Notes &amp; troubleshooting</p>
+<ul>
+<li>If you prefer to use direct GitHub backend instead of Git Gateway, change <code>backend.name</code> to <code>github</code> in <code>admin/config.yml</code> and add <code>repo: owner/repo</code>.</li>
+<li>If uploads fail, make sure <code>media_folder</code> exists or adjust paths in <code>admin/config.yml</code>.</li>
+<li>The current <code>content/data.json</code> is human-editable and also editable via the CMS. I populated it with sample data extracted from your announcements and placeholder staff/books.</li>
+</ul>

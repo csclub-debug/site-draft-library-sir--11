@@ -1,0 +1,22 @@
+{
+  "name": "sir-m-v-library-eleventy",
+  "version": "1.0.0",
+  "description": "Static site for Sir M V Science College Library built with Eleventy and Decap CMS.",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx @11ty/eleventy --serve",
+    "build": "npx @11ty/eleventy"
+  },
+  "keywords": [
+    "eleventy",
+    "netlify",
+    "decap-cms",
+    "static"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@11ty/eleventy": "^2.0.1",
+    "decap-cms-app": "^3.0.0"
+  }
+}

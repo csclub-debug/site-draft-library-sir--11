@@ -1,0 +1,81 @@
+<!-- Base Layout for Sir M V Library Site -->
+<!doctype html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width,initial-scale=1'>
+    <!-- The page title is pulled from the front matter of the content file -->
+    <title>{{ title }} - Sir M V Library</title>
+    <!-- Link to external CSS in the assets folder -->
+    <link rel='stylesheet' href='/assets/style.css'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar (Fixed) -->
+    <div class="navbar-wrap">
+        <div class="navbar" role="navigation" aria-label="Main">
+            <div class="brand">
+                <!-- Ensure logo.svg is placed in /assets/ -->
+                <img class="logo" src="/assets/logo.svg" alt="logo" style="height:40px;width:40px;border-radius:8px;background-color:#3b82f6;">
+                <div>
+                    <div class="title">Sir M V Science College</div>
+                    <div style="font-size:12px;color:var(--muted)">Library & Informatics Centre</div>
+                </div>
+            </div>
+            <button class="hamburger" aria-label="Open menu">☰</button>
+            <div class="nav" role="menubar">
+                <a href="/">Home</a>
+                <a href="/about/">About</a>
+                <a href="/question-papers/">Question Papers</a>
+                <a href="/staff/">Staff</a>
+                <a href="/announcements/">Announcements</a>
+                <a href="/contact/">Contact</a>
+            </div>
+        </div>
+    </div>
+    <!-- Drawer Menu -->
+    <div class="drawer-backdrop" aria-hidden="true"></div>
+    <div class="drawer" aria-hidden="true">
+        <div class="drawer-menu">
+            <a href="/">Home</a>
+            <a href="/about/">About</a>
+            <a href="/question-papers/">Question Papers</a>
+            <a href="/staff/">Staff</a>
+            <a href="/announcements/">Announcements</a>
+            <a href="/contact/">Contact</a>
+            <div style="margin-top:12px"><a class="email-btn" href="mailto:sirmvsciencebdvt@gmail.com">Email: sirmvsciencebdvt@gmail.com</a></div>
+        </div>
+    </div>
+
+    <div class="header-spacer"></div>
+
+    <!-- MAIN CONTENT AREA: Content from individual page templates goes here -->
+    <main>
+        {{ content | safe }}
+    </main>
+
+    <div class="footer-pad"></div>
+    <!-- Footer -->
+    <footer class="site-footer" role="contentinfo">
+        <div class="inner">
+            <div style="display:flex;gap:12px;align-items:center">
+                <img src="/assets/logo.svg" alt="logo" style="height:44px;width:44px;border-radius:8px;background-color:#3b82f6;">
+                <div><div style="font-weight:700">Sir M V Science College Library</div><div style="font-size:13px;color:#9aa4b2">Knowledge hub for students & faculty</div></div>
+            </div>
+            <div style="color:#9aa4b2;font-size:14px">Sir. M.V. Government Science College, Bommanakatte, Bhadravathi - 577302</div>
+            <div style="display:flex;gap:12px;align-items:center">
+                <!-- Simplified social buttons -->
+                <a class="social-btn fb" href="https://facebook.com" target="_blank" aria-label="Facebook">FB</a>
+                <a class="social-btn ig" href="https://instagram.com" target="_blank" aria-label="Instagram">IG</a>
+                <a class="social-btn tw" href="https://twitter.com" target="_blank" aria-label="Twitter">TW</a>
+                <a class="email-btn" href="mailto:sirmvsciencebdvt@gmail.com" aria-label="Email">Email Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Link to external JS in the assets folder -->
+    <script src='/assets/main.js'></script>
+</body>
+</html>
