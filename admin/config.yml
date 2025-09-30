@@ -1,6 +1,8 @@
 backend:
   name: git-gateway
   branch: main
+  # ❗ CRITICAL ADDITION: Specifies your GitHub repository
+  repo: csclub-debug/site-draft-library-sir--11
 
 media_folder: "images/uploads" # Where uploaded images go
 public_folder: "/images/uploads"
