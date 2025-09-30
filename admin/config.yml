@@ -2,101 +2,115 @@ backend:
   name: git-gateway
   branch: main
 
-media_folder: "images/uploads"
+media_folder: "images/uploads" # Where uploaded images go
 public_folder: "/images/uploads"
 
+# Each collection controls what the CMS can edit
 collections:
+  # 1️⃣ MAIN SITE DATA (content/data.json)
   - name: "site_data"
-    label: "Site Data"
-    files:
-      - label: "Main content (data.json)"
-        name: "data"
-        file: "content/data.json"
+    label: "Main Site Data"
+    file: "content/data.json"
+    editor:
+      preview: false
+    fields:
+      - label: "Announcements"
+        name: "announcements"
+        widget: "list"
+        summary: "{{fields.title}} ({{fields.date}})"
         fields:
-          - {label: "Announcements", name: "announcements", widget: "list", fields: [
-              {label: "Title", name: "title", widget: "string"},
-              {label: "Date", name: "date", widget: "datetime", required: false},
-              {label: "Body", name: "body", widget: "text"}
-            ]}
-          - {label: "Staff", name: "staff", widget: "list", fields: [
-              {label: "Name", name: "name", widget: "string"},
-              {label: "Role", name: "role", widget: "string"},
-              {label: "Image", name: "image", widget: "image", required: true, hint: "Upload the staff member's profile picture."},
-              {label: "Email", name: "email", widget: "string", required: false},
-              {label: "Phone", name: "phone", widget: "string", required: false}
-            ]}
-          - {label: "Books", name: "books", widget: "list", fields: [
-              {label: "Title", name: "title", widget: "string"},
-              {label: "Author", name: "author", widget: "string", required: false},
-              {label: "Category", name: "category", widget: "string", required: false},
-              {label: "Year", name: "year", widget: "string", required: false}
-            ]}
-          - {label: "E-Resources", name: "eresources", widget: "list", fields: [
-              {label: "Title", name: "title", widget: "string"},
-              {label: "Link", name: "link", widget: "string"},
-              {label: "Description", name: "description", widget: "text", required: false}
-            ]}
-  
-  # --- START NEW COLLECTION: Question Papers ---
+          - {label: "Title", name: "title", widget: "string"}
+          - {label: "Date", name: "date", widget: "datetime", required: true}
+          - {label: "Body / Note", name: "body", widget: "text", required: true}
+
+      - label: "Staff Members"
+        name: "staff"
+        widget: "list"
+        summary: "{{fields.name}} - {{fields.role}}"
+        fields:
+          - {label: "Name", name: "name", widget: "string"}
+          - {label: "Role", name: "role", widget: "string"}
+          - {label: "Image", name: "image", widget: "image", required: false}
+          - {label: "Email", name: "email", widget: "string", required: false}
+          - {label: "Phone", name: "phone", widget: "string", required: false}
+
+      - label: "Books (Highlights)"
+        name: "books"
+        widget: "list"
+        collapsed: true
+        fields:
+          - {label: "Title", name: "title", widget: "string"}
+          - {label: "Author", name: "author", widget: "string", required: false}
+          - {label: "Category", name: "category", widget: "string", required: false}
+          - {label: "Year", name: "year", widget: "string", required: false}
+
+      - label: "E-Resources"
+        name: "eresources"
+        widget: "list"
+        collapsed: true
+        fields:
+          - {label: "Title", name: "title", widget: "string"}
+          - {label: "Link", name: "link", widget: "string"}
+          - {label: "Description", name: "description", widget: "text", required: false}
+
+      - label: "Research Sites & AI Tools"
+        name: "research_sites"
+        widget: "list"
+        collapsed: true
+        summary: "{{fields.name}}"
+        fields:
+          - {label: "Site Name", name: "name", widget: "string"}
+          - {label: "Tagline / Description", name: "tagline", widget: "string"}
+          - {label: "External URL", name: "link", widget: "string", hint: "Must start with https:// or http://"}
+
+  # 2️⃣ QUESTION PAPERS (content/qpapers.json)
   - name: "question_papers"
     label: "Question Papers"
-    folder: "content/qpapers" # The folder where individual QP files will be stored
-    create: true
-    slug: "{{department}}-{{title}}-{{year}}" # Template for file names
+    file: "content/qpapers.json"
+    editor:
+      preview: false
     fields:
-      - {label: "Department", name: "department", widget: "select", options: [
-          "BCA", 
-          "B.Sc Zoology", 
-          "B.Sc Chemistry", 
-          "B.Sc Microbiology", 
-          "B.Sc Biotechnology", 
-          "B.Sc Botany", 
-          "B.Sc Mathematics", 
-          "B.Sc Physics", 
-          "B.Sc Computer Science", 
-          "M.Sc Industrial Chemistry"
-        ], default: "BCA"}
-      - {label: "Paper Title (e.g., May 2024 - Data Structures)", name: "title", widget: "string"}
-      - {label: "Year/Semester", name: "year", widget: "string", hint: "E.g., 2024 or 3rd Sem"}
-      - {label: "PDF File", name: "file", widget: "file", required: true, media_folder: "/images/uploads/qps", public_folder: "/images/uploads/qps", hint: "Upload the question paper PDF file."}
-      - {label: "Description/Notes", name: "body", widget: "markdown", required: false}
-  # --- END NEW COLLECTION: Question Papers ---
+      - name: "papers"
+        label: "All Question Papers"
+        widget: "list"
+        summary: "{{fields.department}} - {{fields.title}}"
+        fields:
+          - label: "Department"
+            name: "department"
+            widget: "select"
+            options:
+              - "BCA"
+              - "B.Sc Zoology"
+              - "B.Sc Chemistry"
+              - "B.Sc Microbiology"
+              - "B.Sc Biotechnology"
+              - "B.Sc Botany"
+              - "B.Sc Mathematics"
+              - "B.Sc Physics"
+              - "B.Sc Computer Science"
+              - "M.Sc Industrial Chemistry"
+          - {label: "Paper Title (e.g., May 2024 - Data Structures)", name: "title", widget: "string"}
+          - {label: "Year/Semester", name: "year", widget: "string"}
+          - {label: "Google Drive Link", name: "file", widget: "string", hint: "Paste the public link of the question paper PDF"}
+          - {label: "Notes / Description", name: "body", widget: "markdown", required: false}
 
-# Add this new collection to your existing collections list
-
+  # 3️⃣ BOOK CATALOG (content/books.json)
   - name: "catalog"
     label: "Book Catalog (OPAC)"
-    folder: "content/books"
-    create: true
-    slug: "{{accession_no}}" # Unique identifier for each book record
-    identifier_field: "accession_no"
-    format: "json"
-    extension: "json"
-    files:
-    - file: "content/books.json"
-      label: "Book Records List"
-      name: "books_list"
-      fields:
-        - name: "books"
-          label: "Book Records"
-          label_singular: "Book Record"
-          widget: "list"
-          fields:
-            - {label: "Accession Number (Required)", name: "accession_no", widget: "string", hint: "Must be unique, e.g., A1234"}
-            - {label: "Title", name: "title", widget: "string"}
-            - {label: "Author", name: "author", widget: "string"}
-            - {label: "Subject/Department", name: "subject", widget: "string"}
-            - {label: "ISBN", name: "isbn", widget: "string", required: false}
-            - {label: "Publisher", name: "publisher", widget: "string", required: false}
-
-
-# ADD THIS NEW FIELD TO THE FIELDS LIST OF THE 'content/data.json' FILE ENTRY:
-
-  - label: "Research Sites & AI Tools"
-    name: "research_sites"
-    widget: "list"
-    collapsed: true
+    file: "content/books.json"
+    editor:
+      preview: false
     fields:
-    - {label: "Site Name", name: "name", widget: "string", required: true}
-    - {label: "Tagline / Description", name: "tagline", widget: "string", required: true}
-    - {label: "External URL", name: "link", widget: "string", required: true, hint: "Must start with http:// or https://"}
+      - name: "books"
+        label: "Book Records"
+        label_singular: "Book Record"
+        widget: "list"
+        collapsed: true
+        summary: "{{fields.accession_no}} - {{fields.title}}"
+        fields:
+          - {label: "Accession Number", name: "accession_no", widget: "string"}
+          - {label: "Title", name: "title", widget: "string"}
+          - {label: "Author", name: "author", widget: "string"}
+          - {label: "Subject / Department", name: "subject", widget: "string", required: false}
+          - {label: "ISBN", name: "isbn", widget: "string", required: false}
+          - {label: "Publisher", name: "publisher", widget: "string", required: false}
