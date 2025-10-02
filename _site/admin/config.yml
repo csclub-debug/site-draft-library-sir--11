@@ -22,39 +22,39 @@ collections:
             widget: "list"
             summary: "{{fields.title}} ({{fields.date}})"
             fields:
-              - {label: "Title", name: "title", widget: "string"}
-              - {label: "Date", name: "date", widget: "datetime", required: true}
-              - {label: "Body / Note", name: "body", widget: "text", required: true}
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Date", name: "date", widget: "datetime", required: true }
+              - { label: "Body / Note", name: "body", widget: "text", required: true }
 
           - label: "Staff Members"
             name: "staff"
             widget: "list"
             summary: "{{fields.name}} - {{fields.role}}"
             fields:
-              - {label: "Name", name: "name", widget: "string"}
-              - {label: "Role", name: "role", widget: "string"}
-              - {label: "Image", name: "image", widget: "image", required: false}
-              - {label: "Email", name: "email", widget: "string", required: false}
-              - {label: "Phone", name: "phone", widget: "string", required: false}
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Role", name: "role", widget: "string" }
+              - { label: "Image", name: "image", widget: "image", required: false }
+              - { label: "Email", name: "email", widget: "string", required: false }
+              - { label: "Phone", name: "phone", widget: "string", required: false }
 
           - label: "Books (Highlights)"
             name: "books"
             widget: "list"
             collapsed: true
             fields:
-              - {label: "Title", name: "title", widget: "string"}
-              - {label: "Author", name: "author", widget: "string", required: false}
-              - {label: "Category", name: "category", widget: "string", required: false}
-              - {label: "Year", name: "year", widget: "string", required: false}
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Author", name: "author", widget: "string", required: false }
+              - { label: "Category", name: "category", widget: "string", required: false }
+              - { label: "Year", name: "year", widget: "string", required: false }
 
           - label: "E-Resources"
             name: "eresources"
             widget: "list"
             collapsed: true
             fields:
-              - {label: "Title", name: "title", widget: "string"}
-              - {label: "Link", name: "link", widget: "string"}
-              - {label: "Description", name: "description", widget: "text", required: false}
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Link", name: "link", widget: "string" }
+              - { label: "Description", name: "description", widget: "text", required: false }
 
           - label: "Research Sites & AI Tools"
             name: "research_sites"
@@ -62,54 +62,34 @@ collections:
             collapsed: true
             summary: "{{fields.name}}"
             fields:
-              - {label: "Site Name", name: "name", widget: "string"}
-              - {label: "Tagline / Description", name: "tagline", widget: "string"}
-              - {label: "External URL", name: "link", widget: "string", hint: "Must start with http:// or https://"}
+              - { label: "Site Name", name: "name", widget: "string" }
+              - { label: "Tagline / Description", name: "tagline", widget: "string" }
+              - { label: "External URL", name: "link", widget: "string", hint: "Must start with http:// or https://" }
 
-  # 2) QUESTION PAPERS (content/qpapers.json) - FIX APPLIED HERE
-  - name: "question_papers"
+  # 2) QUESTION PAPERS (content/qpapers.json) ✅ FIXED
+  - name: "qpapers"
     label: "Question Papers"
+    file: "content/qpapers.json"
+    format: "json"
     editor:
       preview: false
-    # This structure is the fix: wraps the file in a 'files' array.
-    files:
-      - file: "content/qpapers.json"
-        label: "Question Paper Data"
-        name: "departments_root" 
+    fields:
+      - label: "Departments"
+        name: "departments"
+        widget: "list"
+        label_singular: "Department"
+        summary: "{{fields.department}}"
         fields:
-          # This list widget defines the main array structure in the JSON file
-          - name: "departments" 
-            label: "Departments List"
+          - { label: "Department Name", name: "department", widget: "select", options: ["BCA", "B.Sc Zoology", "B.Sc Chemistry", "B.Sc Microbiology", "B.Sc Biotechnology", "B.Sc Botany", "B.Sc Mathematics", "B.Sc Physics", "B.Sc Computer Science", "M.Sc Industrial Chemistry"] }
+          - { label: "Tagline", name: "tagline", widget: "string", required: false, hint: "Short description for this department’s papers." }
+          - label: "Papers"
+            name: "papers"
             widget: "list"
-            label_singular: "Department Bundle"
-            summary: "{{fields.department}}"
+            label_singular: "Paper"
+            summary: "{{fields.title}}"
             fields:
-              # --- Department Object Fields (Outer List Item) ---
-              - label: "Department Name"
-                name: "department"
-                widget: "select"
-                options:
-                  - "BCA"
-                  - "B.Sc Zoology"
-                  - "B.Sc Chemistry"
-                  - "B.Sc Microbiology"
-                  - "B.Sc Biotechnology"
-                  - "B.Sc Botany"
-                  - "B.Sc Mathematics"
-                  - "B.Sc Physics"
-                  - "B.Sc Computer Science"
-                  - "M.Sc Industrial Chemistry"
-              - {label: "Tagline", name: "tagline", widget: "string", required: false, hint: "A short description of the papers in this bundle."}
-              
-              # --- Papers List Field (Nested List) ---
-              - name: "papers" 
-                label: "Individual Question Papers"
-                widget: "list"
-                label_singular: "Paper"
-                summary: "{{fields.title}}"
-                fields:
-                  - {label: "Paper Title (e.g., Data Structures - 2024)", name: "title", widget: "string"}
-                  - {label: "Google Drive Link", name: "link", widget: "string", hint: "Paste the public link of the question paper PDF"}
+              - { label: "Paper Title (e.g., Data Structures - 2024)", name: "title", widget: "string" }
+              - { label: "Google Drive / PDF Link", name: "link", widget: "string", hint: "Paste public link of the question paper" }
 
   # 3) BOOK CATALOG (content/books.json)
   - name: "catalog"
@@ -118,6 +98,7 @@ collections:
       - file: "content/books.json"
         label: "Book Records"
         name: "books_list"
+        format: "json"
         fields:
           - name: "books"
             label: "Book Records"
@@ -126,9 +107,9 @@ collections:
             collapsed: true
             summary: "{{fields.accession_no}} - {{fields.title}}"
             fields:
-              - {label: "Accession Number", name: "accession_no", widget: "string"}
-              - {label: "Title", name: "title", widget: "string"}
-              - {label: "Author", name: "author", widget: "string"}
-              - {label: "Subject / Department", name: "subject", widget: "string", required: false}
-              - {label: "ISBN", name: "isbn", widget: "string", required: false}
-              - {label: "Publisher", name: "publisher", widget: "string", required: false}
+              - { label: "Accession Number", name: "accession_no", widget: "string" }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Author", name: "author", widget: "string" }
+              - { label: "Subject / Department", name: "subject", widget: "string", required: false }
+              - { label: "ISBN", name: "isbn", widget: "string", required: false }
+              - { label: "Publisher", name: "publisher", widget: "string", required: false }
