@@ -7,7 +7,7 @@ media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
 collections:
-  # 1) MAIN SITE DATA (content/data.json) - No changes needed here, structure is perfect.
+  # 1) MAIN SITE DATA (content/data.json)
   - name: "site_data"
     label: "Main Site Data"
     files:
@@ -69,20 +69,22 @@ collections:
   # 2) QUESTION PAPERS (content/qpapers.json) - FIX APPLIED HERE
   - name: "question_papers"
     label: "Question Papers"
-    # --- FIX: 'file' is removed from the collection root and moved into 'files' ---
+    editor:
+      preview: false
+    # This structure is the fix: wraps the file in a 'files' array.
     files:
       - file: "content/qpapers.json"
         label: "Question Paper Data"
-        name: "qpaper_root" # Using a more generic name for the file object
+        name: "departments_root" 
         fields:
-          # The entire content of qpapers.json is defined as a list field inside this file object
-          - name: "qpaper_data"
-            label: "Department Bundles"
+          # This list widget defines the main array structure in the JSON file
+          - name: "departments" 
+            label: "Departments List"
             widget: "list"
             label_singular: "Department Bundle"
             summary: "{{fields.department}}"
             fields:
-              # --- Department Object Fields ---
+              # --- Department Object Fields (Outer List Item) ---
               - label: "Department Name"
                 name: "department"
                 widget: "select"
@@ -99,7 +101,7 @@ collections:
                   - "M.Sc Industrial Chemistry"
               - {label: "Tagline", name: "tagline", widget: "string", required: false, hint: "A short description of the papers in this bundle."}
               
-              # --- Papers List Field ---
+              # --- Papers List Field (Nested List) ---
               - name: "papers" 
                 label: "Individual Question Papers"
                 widget: "list"
@@ -109,7 +111,7 @@ collections:
                   - {label: "Paper Title (e.g., Data Structures - 2024)", name: "title", widget: "string"}
                   - {label: "Google Drive Link", name: "link", widget: "string", hint: "Paste the public link of the question paper PDF"}
 
-  # 3) BOOK CATALOG (content/books.json) - Structure is correct.
+  # 3) BOOK CATALOG (content/books.json)
   - name: "catalog"
     label: "Book Catalog (OPAC)"
     files:
