@@ -7,7 +7,7 @@ media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
 collections:
-  # 1) MAIN SITE DATA (content/data.json)
+  # 1) MAIN SITE DATA (content/data.json) - No changes needed here, structure is perfect.
   - name: "site_data"
     label: "Main Site Data"
     files:
@@ -66,47 +66,50 @@ collections:
               - {label: "Tagline / Description", name: "tagline", widget: "string"}
               - {label: "External URL", name: "link", widget: "string", hint: "Must start with http:// or https://"}
 
-  # 2) QUESTION PAPERS (content/qpapers.json) - FINAL WORKING CONFIG
+  # 2) QUESTION PAPERS (content/qpapers.json) - FIX APPLIED HERE
   - name: "question_papers"
     label: "Question Papers"
-    # Defines this as a single file collection
-    file: "content/qpapers.json" 
-    fields:
-      # Defines the root of the JSON file as a repeatable list of departments
-      - name: "qpaper_data"
-        label: "Department Bundles"
-        widget: "list"
-        label_singular: "Department Bundle"
-        summary: "{{fields.department}}"
+    # --- FIX: 'file' is removed from the collection root and moved into 'files' ---
+    files:
+      - file: "content/qpapers.json"
+        label: "Question Paper Data"
+        name: "qpaper_root" # Using a more generic name for the file object
         fields:
-          # --- Department Object Fields (Matching the outer object in your JSON) ---
-          - label: "Department Name"
-            name: "department"
-            widget: "select"
-            options:
-              - "BCA"
-              - "B.Sc Zoology"
-              - "B.Sc Chemistry"
-              - "B.Sc Microbiology"
-              - "B.Sc Biotechnology"
-              - "B.Sc Botany"
-              - "B.Sc Mathematics"
-              - "B.Sc Physics"
-              - "B.Sc Computer Science"
-              - "M.Sc Industrial Chemistry"
-          - {label: "Tagline", name: "tagline", widget: "string", required: false, hint: "A short description of the papers in this bundle."}
-          
-          # --- Papers List Field (Matching the nested 'papers' array in your JSON) ---
-          - name: "papers" 
-            label: "Individual Question Papers"
+          # The entire content of qpapers.json is defined as a list field inside this file object
+          - name: "qpaper_data"
+            label: "Department Bundles"
             widget: "list"
-            label_singular: "Paper"
-            summary: "{{fields.title}}"
+            label_singular: "Department Bundle"
+            summary: "{{fields.department}}"
             fields:
-              - {label: "Paper Title (e.g., Data Structures - 2024)", name: "title", widget: "string"}
-              - {label: "Google Drive Link", name: "link", widget: "string", hint: "Paste the public link of the question paper PDF"}
+              # --- Department Object Fields ---
+              - label: "Department Name"
+                name: "department"
+                widget: "select"
+                options:
+                  - "BCA"
+                  - "B.Sc Zoology"
+                  - "B.Sc Chemistry"
+                  - "B.Sc Microbiology"
+                  - "B.Sc Biotechnology"
+                  - "B.Sc Botany"
+                  - "B.Sc Mathematics"
+                  - "B.Sc Physics"
+                  - "B.Sc Computer Science"
+                  - "M.Sc Industrial Chemistry"
+              - {label: "Tagline", name: "tagline", widget: "string", required: false, hint: "A short description of the papers in this bundle."}
+              
+              # --- Papers List Field ---
+              - name: "papers" 
+                label: "Individual Question Papers"
+                widget: "list"
+                label_singular: "Paper"
+                summary: "{{fields.title}}"
+                fields:
+                  - {label: "Paper Title (e.g., Data Structures - 2024)", name: "title", widget: "string"}
+                  - {label: "Google Drive Link", name: "link", widget: "string", hint: "Paste the public link of the question paper PDF"}
 
-  # 3) BOOK CATALOG (content/books.json)
+  # 3) BOOK CATALOG (content/books.json) - Structure is correct.
   - name: "catalog"
     label: "Book Catalog (OPAC)"
     files:
