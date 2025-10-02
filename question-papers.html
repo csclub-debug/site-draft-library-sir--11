@@ -1,266 +1,346 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset='utf-8'>
-    <meta name='viewport' content='width=device-width,initial-scale=1'>
-    <title>Question Papers - Sir M V Library</title>
-    <link rel='stylesheet' href='assets/style.css'>
-    <style>
-        /* CSS for dynamic QP Cards and Accordion/List */
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width,initial-scale=1'>
+  <title>Question Papers - Sir M V Library</title>
+  <link rel='stylesheet' href='assets/style.css'>
+  <style>
+    /* ===============================
+       Question Papers Page Styling
+    ================================ */
 
-        .qp-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
+    .qp-section {
+      margin-top: 2rem;
+    }
 
-        .qp-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-            padding: 20px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            border: 1px solid var(--border-color, #f1f5f9);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+    /* Search + Filter Bar */
+    .qp-search-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
 
-        .qp-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
-        }
+    .qp-search-bar input,
+    .qp-search-bar select {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      font-size: 1rem;
+      outline: none;
+      transition: box-shadow 0.2s, border-color 0.2s;
+      background: #fff;
+    }
 
-        .qp-card-title {
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: var(--primary, #4f46e5);
-            margin-bottom: 10px;
-        }
+    .qp-search-bar input {
+      flex: 1;
+      min-width: 200px;
+      max-width: 400px;
+    }
 
-        .qp-card-tagline {
-            color: var(--muted, #64748b);
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-        }
-        
-        .qp-card-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 0.9rem;
-            color: var(--dark);
-            font-weight: 600;
-        }
+    .qp-search-bar select {
+      flex-shrink: 0;
+      min-width: 160px;
+    }
 
-        .qp-link-list {
-            margin-top: 30px;
-            padding: 15px;
-            border: 1px solid #eef2ff;
-            border-radius: 12px;
-            background: #f8fafc;
-        }
+    .qp-search-bar input:focus,
+    .qp-search-bar select:focus {
+      border-color: var(--primary, #4f46e5);
+      box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
+    }
 
-        .qp-link-list h3 {
-            margin-top: 0;
-            color: var(--primary);
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 8px;
-            margin-bottom: 15px;
-        }
+    /* Department Cards Grid */
+    .qp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
 
-        .qp-link-list a {
-            display: block;
-            padding: 10px 0;
-            border-bottom: 1px dotted #e0e0e0;
-            color: var(--dark);
-            transition: color 0.2s;
-        }
+    .qp-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      border: 1px solid var(--border-color, #f1f5f9);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
 
-        .qp-link-list a:hover {
-            color: var(--accent);
-        }
+    .qp-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+    }
 
-        .qp-link-list a:last-child {
-            border-bottom: none;
-        }
+    .qp-card.active {
+      border: 2px solid var(--primary, #4f46e5);
+    }
 
-        /* Active Card state for visual feedback */
-        .qp-card.active {
-            border: 2px solid var(--primary);
-        }
+    .qp-card-title {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--primary, #4f46e5);
+      margin-bottom: 10px;
+    }
 
-        /* Simple Loading/Error Style */
-        .loading-message {
-            text-align: center; 
-            padding: 40px; 
-            color: var(--muted);
-        }
-    </style>
+    .qp-card-tagline {
+      color: var(--muted, #64748b);
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+      line-height: 1.4;
+    }
+
+    .qp-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: var(--dark);
+      font-weight: 600;
+    }
+
+    /* Papers List */
+    .qp-link-list {
+      margin-top: 30px;
+      padding: 15px 20px;
+      border: 1px solid #eef2ff;
+      border-radius: 12px;
+      background: #f8fafc;
+      transition: 0.3s;
+    }
+
+    .qp-link-list h3 {
+      margin-top: 0;
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 8px;
+      margin-bottom: 15px;
+    }
+
+    .qp-link-list a {
+      display: block;
+      padding: 10px 0;
+      border-bottom: 1px dotted #e0e0e0;
+      color: var(--dark);
+      transition: color 0.2s;
+      font-weight: 500;
+    }
+
+    .qp-link-list a:hover {
+      color: var(--accent, #6366f1);
+    }
+
+    .qp-link-list a:last-child {
+      border-bottom: none;
+    }
+
+    /* Loading/Error */
+    .loading-message {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .qp-card {
+        padding: 16px;
+      }
+      .qp-card-title {
+        font-size: 1.1rem;
+      }
+      .qp-card-tagline {
+        font-size: 0.85rem;
+      }
+      .qp-link-list {
+        padding: 12px;
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="navbar-wrap">
+  <!-- Navbar -->
+  <div class="navbar-wrap">
     <div class="navbar" role="navigation" aria-label="Main">
-        <div class="brand"><img class="logo" src="logo.svg" alt="logo"><div><div class="title">Sir M V Science College</div><div style="font-size:12px;color:var(--muted)">Library & Informatics Centre</div></div></div>
-        <button class="hamburger" aria-label="Open menu">☰</button>
-        <div class="nav" role="menubar">
-            <a href="index.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="question-papers.html">Question Papers</a>
-            <a href="staff.html">Staff</a>
-            <a href="announcements.html">Announcements</a>
-            <a href="contact.html">Contact</a>
+      <div class="brand">
+        <img class="logo" src="logo.svg" alt="logo">
+        <div>
+          <div class="title">Sir M V Science College</div>
+          <div style="font-size:12px;color:var(--muted)">Library & Informatics Centre</div>
         </div>
-    </div>
-</div>
-<div class="drawer-backdrop" aria-hidden="true"></div>
-<div class="drawer" aria-hidden="true">
-    <div class="drawer-menu">
+      </div>
+      <button class="hamburger" aria-label="Open menu">☰</button>
+      <div class="nav" role="menubar">
         <a href="index.html">Home</a>
         <a href="about.html">About</a>
-        <a href="question-papers.html">Question Papers</a>
+        <a href="question-papers.html" class="active">Question Papers</a>
         <a href="staff.html">Staff</a>
         <a href="announcements.html">Announcements</a>
         <a href="contact.html">Contact</a>
-        <div style="margin-top:12px"><a class="email-btn" href="mailto:sirmvsciencebdvt@gmail.com">Email: sirmvsciencebdvt@gmail.com</a></div>
+      </div>
     </div>
-</div>
-<div class="header-spacer"></div>
+  </div>
+  <div class="drawer-backdrop" aria-hidden="true"></div>
+  <div class="drawer" aria-hidden="true">
+    <div class="drawer-menu">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="question-papers.html">Question Papers</a>
+      <a href="staff.html">Staff</a>
+      <a href="announcements.html">Announcements</a>
+      <a href="contact.html">Contact</a>
+      <div style="margin-top:12px">
+        <a class="email-btn" href="mailto:sirmvsciencebdvt@gmail.com">Email: sirmvsciencebdvt@gmail.com</a>
+      </div>
+    </div>
+  </div>
+  <div class="header-spacer"></div>
 
-<section class="section container">
-    <h1 style="margin-top:0">Question Papers by Department</h1>
-    
+  <section class="section container qp-section">
+    <h1 style="margin-top:0;text-align:center;">Question Papers by Department</h1>
+
+    <!-- Search + Filter Bar -->
+    <div class="qp-search-bar">
+      <input type="text" id="qpSearchInput" placeholder="Search by keyword or subject...">
+      <select id="qpDeptFilter">
+        <option value="all">All Departments</option>
+      </select>
+    </div>
+
+    <!-- Department Grid -->
     <div id="qp-grid-container" class="qp-grid">
-        <div class="loading-message">Loading departments...</div>
+      <div class="loading-message">Loading departments...</div>
     </div>
-    
-    <div id="qp-detail-container">
-        </div>
-</section>
 
-<div class="footer-pad"></div>
-<footer class="site-footer" role="contentinfo">
+    <!-- Paper List -->
+    <div id="qp-detail-container"></div>
+  </section>
+
+  <footer class="site-footer" role="contentinfo">
     <div class="inner">
-        <div style="display:flex;gap:12px;align-items:center">
-            <img src="logo.svg" alt="logo" style="height:44px;width:44px;border-radius:8px">
-            <div><div style="font-weight:700">Sir M V Science College Library</div><div style="font-size:13px;color:#9aa4b2">Knowledge hub for students & faculty</div></div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <img src="logo.svg" alt="logo" style="height:44px;width:44px;border-radius:8px">
+        <div>
+          <div style="font-weight:700">Sir M V Science College Library</div>
+          <div style="font-size:13px;color:#9aa4b2">Knowledge hub for students & faculty</div>
         </div>
-        <div style="color:#9aa4b2;font-size:14px">Sir. M.V. Government Science College, Bommanakatte, Bhadravathi - 577302</div>
-        <div style="display:flex;gap:12px;align-items:center">
-            <a class="social-btn fb" href="https://facebook.com" target="_blank" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 12.07C22 6.48 17.52 2 11.93 2S2 6.48 2 12.07C2 17.09 5.64 21.26 10.36 22v-7.02H7.9v-2.92h2.46v-2.22c0-2.44 1.46-3.79 3.6-3.79 1.04 0 2.12.18 2.12.18v2.33h-1.19c-1.17 0-1.54.73-1.54 1.48v1.98h2.62l-.42 2.92h-2.2V22C18.36 21.26 22 17.09 22 12.07z" fill="white"/></svg></a>
-            <a class="social-btn ig" href="https://instagram.com" target="_blank" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm5 6.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9zm6.5-.5a1 1 0 11-2 0 1 1 0 012 0z" fill="white"/></svg></a>
-            <a class="social-btn tw" href="https://twitter.com" target="_blank" aria-label="Twitter"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 5.92c-.63.28-1.3.47-2.01.56.72-.43 1.27-1.12 1.53-1.94-.68.4-1.43.7-2.23.86A3.49 3.49 0 0016.5 4c-1.93 0-3.5 1.6-3.5 3.57 0 .28.03.55.09.81-2.91-.15-5.49-1.58-7.21-3.75-.3.5-.47 1.08-.47 1.69 0 1.16.61 2.19 1.54 2.79-.56-.02-1.09-.18-1.55-.42v.04c0 1.64 1.15 3.01 2.67 3.33-.28.07-.58.11-.88.11-.21 0-.42-.02-.62-.06.42 1.31 1.66 2.26 3.13 2.29A6.98 6.98 0 012 19.54a9.8 9.8 0 005.29 1.56c6.35 0 9.83-5.6 9.83-10.46v-.48c.68-.5 1.27-1.12 1.74-1.83-.63.28-1.3.47-2.01.56z" fill="white"/></svg></a>
-            <a class="email-btn" href="mailto:sirmvsciencebdvt@gmail.com" aria-label="Email">Email Us</a>
-        </div>
+      </div>
+      <div style="color:#9aa4b2;font-size:14px">
+        Sir. M.V. Government Science College, Bommanakatte, Bhadravathi - 577302
+      </div>
     </div>
-</footer>
+  </footer>
 
-<script src='assets/main.js'></script>
-<script>
-    /**
-     * Question Paper Department Card and Dynamic List Logic (Client-Side)
-     * Reads department data from content/qpapers.json and renders them as clickable cards.
-     */
+  <script src='assets/main.js'></script>
+  <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const gridContainer = document.getElementById('qp-grid-container');
-        const detailContainer = document.getElementById('qp-detail-container');
-        const jsonPath = 'content/qpapers.json';
+      const gridContainer = document.getElementById('qp-grid-container');
+      const detailContainer = document.getElementById('qp-detail-container');
+      const searchInput = document.getElementById('qpSearchInput');
+      const deptFilter = document.getElementById('qpDeptFilter');
+      const jsonPath = 'content/qpapers.json';
 
-        // Function to render the list of PDFs for a selected department
-        const renderPaperList = (departmentData) => {
-            let listHTML = `
-                <h3>Question Papers for ${departmentData.department}</h3>
-                <div class="qp-link-list">
-            `;
-            
-            if (departmentData.papers && departmentData.papers.length > 0) {
-                departmentData.papers.forEach(paper => {
-                    listHTML += `<a href="${paper.link}" target="_blank" rel="noopener noreferrer">${paper.title} (Download PDF)</a>`;
-                });
-            } else {
-                listHTML += `<p style="color:var(--muted)">No question papers currently uploaded for this department.</p>`;
-            }
-            
-            listHTML += `</div>`;
-            detailContainer.innerHTML = listHTML;
-        };
+      let allDepartments = [];
 
-        // Function to handle card click
-        const handleCardClick = (event, departmentData) => {
-            // Remove 'active' class from all cards
-            document.querySelectorAll('.qp-card').forEach(card => card.classList.remove('active'));
-            
-            // Add 'active' class to the clicked card
-            event.currentTarget.classList.add('active');
-            
-            // Render the PDF list
-            renderPaperList(departmentData);
-            
-            // Scroll to the list
-            detailContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        };
-        
-        // 1. Fetch the data
-        fetch(jsonPath)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(departmentsData => {
-                gridContainer.innerHTML = ''; // Clear the "Loading" message
+      const renderPaperList = (dept) => {
+        let html = `
+          <h3>Question Papers for ${dept.department}</h3>
+          <div class="qp-link-list">
+        `;
+        if (dept.papers?.length) {
+          dept.papers.forEach(p => {
+            html += `<a href="${p.link}" target="_blank">${p.title} (Download PDF)</a>`;
+          });
+        } else {
+          html += `<p style="color:var(--muted)">No question papers uploaded.</p>`;
+        }
+        html += `</div>`;
+        detailContainer.innerHTML = html;
+      };
 
-                if (!departmentsData || departmentsData.length === 0) {
-                    gridContainer.innerHTML = '<div class="loading-message">No departments found with uploaded papers.</div>';
-                    return;
-                }
+      const renderCards = (depts) => {
+        gridContainer.innerHTML = '';
+        if (!depts.length) {
+          gridContainer.innerHTML = '<div class="loading-message">No results found.</div>';
+          detailContainer.innerHTML = '';
+          return;
+        }
 
-                // 2. Render Department Cards
-                departmentsData.forEach(dept => {
-                    const card = document.createElement('div');
-                    card.classList.add('qp-card');
-                    
-                    const papersCount = dept.papers ? dept.papers.length : 0;
-                    
-                    card.innerHTML = `
-                        <div class="qp-card-content">
-                            <div class="qp-card-title">${dept.department}</div>
-                            <div class="qp-card-tagline">${dept.tagline || 'Click to view available question papers.'}</div>
-                        </div>
-                        <div class="qp-card-footer">
-                            <span>${papersCount} Papers</span>
-                            <span>View →</span>
-                        </div>
-                    `;
-                    
-                    // Attach click handler with the department data
-                    card.addEventListener('click', (e) => handleCardClick(e, dept));
-                    
-                    gridContainer.appendChild(card);
-                });
+        depts.forEach(dept => {
+          const card = document.createElement('div');
+          card.classList.add('qp-card');
+          const count = dept.papers?.length || 0;
 
-                // Optionally, automatically open the first department list on load
-                if (departmentsData.length > 0) {
-                     // Simulate click on the first card after rendering
-                     setTimeout(() => {
-                         const firstCard = gridContainer.querySelector('.qp-card');
-                         if (firstCard) {
-                             firstCard.classList.add('active'); // Set active state
-                             renderPaperList(departmentsData[0]); // Render first list
-                         }
-                     }, 50);
-                }
+          card.innerHTML = `
+            <div>
+              <div class="qp-card-title">${dept.department}</div>
+              <div class="qp-card-tagline">${dept.tagline || 'Click to view available question papers.'}</div>
+            </div>
+            <div class="qp-card-footer">
+              <span>${count} Papers</span><span>View →</span>
+            </div>
+          `;
 
+          card.addEventListener('click', (e) => {
+            document.querySelectorAll('.qp-card').forEach(c => c.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+            renderPaperList(dept);
+            detailContainer.scrollIntoView({ behavior: 'smooth' });
+          });
 
-            })
-            .catch(e => {
-                console.error('Error fetching question papers:', e);
-                gridContainer.innerHTML = '<div class="loading-message" style="color: red;">Failed to load question papers. Check if content/qpapers.json exists.</div>';
-            });
+          gridContainer.appendChild(card);
+        });
+      };
+
+      // Filtering logic
+      const filterData = () => {
+        const query = searchInput.value.toLowerCase().trim();
+        const selectedDept = deptFilter.value;
+        return allDepartments.filter(d => {
+          const matchesDept = selectedDept === 'all' || d.department === selectedDept;
+          const matchesQuery = d.department.toLowerCase().includes(query) ||
+            d.papers.some(p => p.title.toLowerCase().includes(query));
+          return matchesDept && matchesQuery;
+        });
+      };
+
+      const applyFilters = () => {
+        renderCards(filterData());
+      };
+
+      searchInput.addEventListener('input', applyFilters);
+      deptFilter.addEventListener('change', applyFilters);
+
+      // Fetch JSON
+      fetch(jsonPath)
+        .then(res => res.json())
+        .then(data => {
+          allDepartments = data || [];
+          renderCards(allDepartments);
+
+          // Populate filter dropdown
+          data.forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = d.department;
+            opt.textContent = d.department;
+            deptFilter.appendChild(opt);
+          });
+
+          // Default view
+          if (allDepartments.length) {
+            document.querySelector('.qp-card')?.classList.add('active');
+            renderPaperList(allDepartments[0]);
+          }
+        })
+        .catch(() => {
+          gridContainer.innerHTML = '<div class="loading-message" style="color:red;">Failed to load data.</div>';
+        });
     });
-</script>
+  </script>
 </body>
 </html>
