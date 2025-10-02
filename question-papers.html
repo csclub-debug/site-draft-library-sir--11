@@ -166,7 +166,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const gridContainer = document.getElementById('qp-grid-container');
         const detailContainer = document.getElementById('qp-detail-container');
-        const jsonPath = 'content/qpapers.json'; // IMPORTANT: You must create this file!
+        const jsonPath = 'content/qpapers.json';
 
         // Function to render the list of PDFs for a selected department
         const renderPaperList = (departmentData) => {
@@ -245,7 +245,6 @@
                 // Optionally, automatically open the first department list on load
                 if (departmentsData.length > 0) {
                      // Simulate click on the first card after rendering
-                     // We need a slight delay or wait for the cards to be attached
                      setTimeout(() => {
                          const firstCard = gridContainer.querySelector('.qp-card');
                          if (firstCard) {

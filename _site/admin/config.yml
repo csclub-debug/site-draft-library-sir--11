@@ -66,37 +66,45 @@ collections:
               - {label: "Tagline / Description", name: "tagline", widget: "string"}
               - {label: "External URL", name: "link", widget: "string", hint: "Must start with http:// or https://"}
 
-  # 2) QUESTION PAPERS (content/qpapers.json)
+  # 2) QUESTION PAPERS (content/qpapers.json) - FINAL WORKING CONFIG
   - name: "question_papers"
     label: "Question Papers"
-    files:
-      - file: "content/qpapers.json"
-        label: "Question Papers List"
-        name: "qpapers"
+    # Defines this as a single file collection
+    file: "content/qpapers.json" 
+    fields:
+      # Defines the root of the JSON file as a repeatable list of departments
+      - name: "qpaper_data"
+        label: "Department Bundles"
+        widget: "list"
+        label_singular: "Department Bundle"
+        summary: "{{fields.department}}"
         fields:
-          - name: "papers"
-            label: "All Question Papers"
+          # --- Department Object Fields (Matching the outer object in your JSON) ---
+          - label: "Department Name"
+            name: "department"
+            widget: "select"
+            options:
+              - "BCA"
+              - "B.Sc Zoology"
+              - "B.Sc Chemistry"
+              - "B.Sc Microbiology"
+              - "B.Sc Biotechnology"
+              - "B.Sc Botany"
+              - "B.Sc Mathematics"
+              - "B.Sc Physics"
+              - "B.Sc Computer Science"
+              - "M.Sc Industrial Chemistry"
+          - {label: "Tagline", name: "tagline", widget: "string", required: false, hint: "A short description of the papers in this bundle."}
+          
+          # --- Papers List Field (Matching the nested 'papers' array in your JSON) ---
+          - name: "papers" 
+            label: "Individual Question Papers"
             widget: "list"
-            summary: "{{fields.department}} - {{fields.title}}"
+            label_singular: "Paper"
+            summary: "{{fields.title}}"
             fields:
-              - label: "Department"
-                name: "department"
-                widget: "select"
-                options:
-                  - "BCA"
-                  - "B.Sc Zoology"
-                  - "B.Sc Chemistry"
-                  - "B.Sc Microbiology"
-                  - "B.Sc Biotechnology"
-                  - "B.Sc Botany"
-                  - "B.Sc Mathematics"
-                  - "B.Sc Physics"
-                  - "B.Sc Computer Science"
-                  - "M.Sc Industrial Chemistry"
-              - {label: "Paper Title (e.g., May 2024 - Data Structures)", name: "title", widget: "string"}
-              - {label: "Year/Semester", name: "year", widget: "string"}
-              - {label: "Google Drive Link", name: "file", widget: "string", hint: "Paste the public link of the question paper PDF"}
-              - {label: "Notes / Description", name: "body", widget: "markdown", required: false}
+              - {label: "Paper Title (e.g., Data Structures - 2024)", name: "title", widget: "string"}
+              - {label: "Google Drive Link", name: "link", widget: "string", hint: "Paste the public link of the question paper PDF"}
 
   # 3) BOOK CATALOG (content/books.json)
   - name: "catalog"
