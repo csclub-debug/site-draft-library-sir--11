@@ -39,7 +39,8 @@
             margin: 0 auto 20px;
             overflow: hidden;
             border: 4px solid var(--primary-color, #007bff); /* Primary color ring */
-            box-shadow: 0 0 0 6px rgba(var(--primary-rgb, 0, 123, 255), 0.2);
+            /* The RGB variable below assumes your primary color has an RGB counterpart defined elsewhere */
+            box-shadow: 0 0 0 6px rgba(var(--primary-rgb, 0, 123, 255), 0.2); 
         }
 
         .staff-card-img-wrap img {
@@ -59,7 +60,14 @@
         .staff-designation {
             color: var(--muted, #6c757d);
             font-size: 1rem;
-            margin-bottom: 0; /* No bottom margin needed without links */
+            margin-bottom: 0;
+        }
+
+        .loading-message {
+            text-align: center; 
+            padding: 40px; 
+            color: var(--muted);
+            grid-column: 1 / -1; /* Centers in the grid */
         }
 
         /* Responsive adjustments for smaller screens */
@@ -102,33 +110,9 @@
 <div style="height:20px"></div>
 <section class="section container">
     <h1 style="margin-top:0">Staff</h1>
-    <div class="staff-grid">
-        <div class="staff-card">
-            <div class="staff-card-img-wrap">
-                <img src="assets/images/principal.jpg" alt="Dr. A. Principal">
-            </div>
-            <div class="staff-name">Dr. A. Principal</div>
-            <div class="staff-designation">Principal</div>
-            
-        </div>
-        
-        <div class="staff-card">
-            <div class="staff-card-img-wrap">
-                <img src="assets/images/librarian.jpg" alt="Ms. L. Librarian">
-            </div>
-            <div class="staff-name">Ms. L. Librarian</div>
-            <div class="staff-designation">Librarian</div>
-        </div>
-        
-        <div class="staff-card">
-            <div class="staff-card-img-wrap">
-                <img src="assets/images/staff1.jpg" alt="Mr. R. Assistant">
-            </div>
-            <div class="staff-name">Mr. R. Assistant</div>
-            <div class="staff-designation">Assistant Librarian</div>
-        </div>
-
-        </div>
+    <div id="staff-grid-container" class="staff-grid">
+        <div class="loading-message">Loading staff information...</div>
+    </div>
 </section>
 <div class="footer-pad"></div>
 
@@ -149,5 +133,56 @@
     </div>
 </footer>
 
-<script src='assets/main.js'></script></body>
+<script src='assets/main.js'></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const staffGridContainer = document.getElementById('staff-grid-container');
+        const jsonPath = 'content/data.json'; // Data file path
+
+        fetch(jsonPath)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const staffData = data.staff; // Access the 'staff' array inside data.json
+
+                staffGridContainer.innerHTML = ''; // Clear the "Loading" message
+
+                if (!staffData || staffData.length === 0) {
+                    staffGridContainer.innerHTML = '<div class="loading-message">No staff members found.</div>';
+                    return;
+                }
+
+                // Iterate over the staff array and create a card for each member
+                staffData.forEach(member => {
+                    // Use a placeholder image if 'image' field is missing or empty
+                    const imageSrc = member.image && member.image.trim() !== '' 
+                        ? member.image 
+                        : 'images/default-staff.jpg'; // Be sure to have a default image here!
+                    
+                    const card = document.createElement('div');
+                    card.classList.add('staff-card');
+                    
+                    card.innerHTML = `
+                        <div class="staff-card-img-wrap">
+                            <img src="${imageSrc}" alt="${member.name}">
+                        </div>
+                        <div class="staff-name">${member.name}</div>
+                        <div class="staff-designation">${member.role}</div>
+                        ${member.email ? `<a href="mailto:${member.email}" style="display:block;margin-top:10px;font-size:0.9rem;color:var(--primary)">Email</a>` : ''}
+                    `;
+                    
+                    staffGridContainer.appendChild(card);
+                });
+            })
+            .catch(e => {
+                console.error('Error fetching staff data:', e);
+                staffGridContainer.innerHTML = '<div class="loading-message" style="color: red; grid-column: 1 / -1;">Failed to load staff data. Check content/data.json.</div>';
+            });
+    });
+</script>
+</body>
 </html>

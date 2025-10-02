@@ -66,7 +66,7 @@ collections:
               - { label: "Tagline / Description", name: "tagline", widget: "string" }
               - { label: "External URL", name: "link", widget: "string", hint: "Must start with http:// or https://" }
 
-  # 2) QUESTION PAPERS (content/qpapers.json)
+  # 2) QUESTION PAPERS (content/qpapers.json) - FIXED
   - name: "qpapers"
     label: "Question Papers"
     files:
@@ -85,20 +85,12 @@ collections:
             fields:
               - label: "Department Name"
                 name: "department"
-                widget: "select"
-                options:
-                  - "BCA"
-                  - "B.Sc Zoology"
-                  - "B.Sc Chemistry"
-                  - "B.Sc Microbiology"
-                  - "B.Sc Biotechnology"
-                  - "B.Sc Botany"
-                  - "B.Sc Mathematics"
-                  - "B.Sc Physics"
-                  - "B.Sc Computer Science"
-                  - "M.Sc Industrial Chemistry"
+                widget: "string"
+                pattern: 
+                  - "^[A-Za-z0-9 .&()-]+$"
+                  - "Department name can only contain letters, numbers, spaces, and .&()- characters"
 
-              - { label: "Tagline", name: "tagline", widget: "string", required: false, hint: "Short description for this department’s papers." }
+              - { label: "Tagline", name: "tagline", widget: "string", required: false, hint: "Short description for this department's papers." }
 
               - label: "Papers"
                 name: "papers"
@@ -106,9 +98,9 @@ collections:
                 label_singular: "Paper"
                 summary: "{{fields.title}} ({{fields.tag}})"
                 fields:
-                  - { label: "Paper Title (e.g., Data Structures - 2024)", name: "title", widget: "string" }
-                  - { label: "Tag / Semester / Year", name: "tag", widget: "string", required: false, hint: "Optional tag like 'Semester 4' or '2024'." }
-                  - { label: "Google Drive / PDF Link", name: "link", widget: "string", hint: "Paste public link or upload path of the question paper" }
+                  - { label: "Paper Title", name: "title", widget: "string", required: true }
+                  - { label: "Tag / Semester / Year", name: "tag", widget: "string", required: false }
+                  - { label: "PDF Link", name: "link", widget: "string", required: true }
 
   # 3) BOOK CATALOG (content/books.json)
   - name: "catalog"
