@@ -13,16 +13,16 @@
   ],
   "staff": [
     {
-      "name": "Dr. shoaib",
+      "name": "Mr. Mohammed shoaib",
       "role": "Librarian",
-      "image": "/images/uploads/screenshot-2025-07-29-070031.png",
+      "image": "/images/uploads/20231216_122317.jpg",
       "email": "librarian@example.edu",
       "phone": ""
     },
     {
-      "name": "Ms. C. D. Assistant",
+      "name": "Mr. Hafeez Ahammed",
       "role": "Assistant Librarian",
-      "image": "/images/uploads/ms-c-d-assistant.jpg",
+      "image": "/images/uploads/1000067115.webp",
       "email": "assistant@example.edu",
       "phone": ""
     }
@@ -57,7 +57,7 @@
     {
       "name": "Google Gemini",
       "tagline": "AI Assistant for powerful research and summarization.netlify",
-      "link": "https://https://www.netlify.com//"
+      "link": "https://www.netlify.com/"
     },
     {
       "name": "ResearchGate",
