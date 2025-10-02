@@ -21,6 +21,11 @@
       "tagline": "Previous year papers for Object-Oriented Programming and Data Structures.",
       "papers": [
         {
+          "title": "maths paper 2025 fourth sem",
+          "tag": "maths",
+          "link": "https://www.netlify.com/"
+        },
+        {
           "title": "BCA - OOP with Java - 2024",
           "tag": "Semester 3 / 2024",
           "link": "/uploads/qps/bca-oop-2024.pdf"
@@ -29,11 +34,6 @@
           "title": "BCA - Data Structures - 2023",
           "tag": "Semester 2 / 2023",
           "link": "/uploads/qps/bca-ds-2023.pdf"
-        },
-        {
-          "title": "maths paper 2025 fourth sem",
-          "tag": "maths",
-          "link": "https://www.netlify.com/"
         }
       ]
     },
