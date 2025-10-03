@@ -172,10 +172,6 @@
         }
 
 
-        /* === HERO SECTION (Reusing .about for structure) === */
-        /* Removed .hero section styles as the page content structure is already defined */
-
-
         /* === ABOUT SECTION === */
         .about {
             max-width: 1200px;
@@ -307,25 +303,6 @@
             text-align: center;
         }
 
-        .social-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 999px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            box-shadow: 0 10px 30px rgba(2, 6, 23, 0.2);
-            transition: transform .18s;
-        }
-        .social-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .social-btn.fb { background: linear-gradient(135deg, #1877f2, #0a58ca); }
-        .social-btn.ig { background: linear-gradient(135deg, #f58529, #dd2a7b); }
-        .social-btn.tw { background: linear-gradient(135deg, #1DA1F2, #0d8bf2); }
-
         .email-btn {
             display: inline-flex;
             align-items: center;
@@ -451,7 +428,7 @@
         <div class="navbar" role="navigation" aria-label="Main">
             <div class="brand">
                 <!-- Replaced logo.svg with a placeholder image -->
-                <img class="logo" src="https://placehold.co/48x48/4f46e5/ffffff?text=L" alt="logo">
+                <img class="logo" src="logo.svg" alt="logo">
                 <div>
                     <div class="title">Sir M V Science College</div>
                     <div style="font-size:12px;color:var(--muted)">Library & Informatics Centre</div>
@@ -507,7 +484,7 @@
             </div>
             <div style="flex:0 0 320px">
                 <!-- Replaced college.jpg with a placeholder image -->
-                <img src="https://placehold.co/320x200/4f46e5/ffffff?text=COLLEGE" alt="College Building" style="width:100%;border-radius:12px;box-shadow:0 12px 30px rgba(15,23,42,0.06)">
+                <img src="college.jpg" alt="College Building" style="width:100%;border-radius:12px;box-shadow:0 12px 30px rgba(15,23,42,0.06)">
             </div>
         </div>
     </section>
@@ -525,7 +502,7 @@
             </div>
             <div style="flex:0 0 320px">
                 <!-- Replaced library.jpg with a placeholder image -->
-                <img src="https://placehold.co/320x200/7c3aed/ffffff?text=LIBRARY+HUB" alt="Library" style="width:100%;border-radius:12px;box-shadow:0 12px 30px rgba(15,23,42,0.06)">
+                <img src="library.jpg" alt="Library" style="width:100%;border-radius:12px;box-shadow:0 12px 30px rgba(15,23,42,0.06)">
             </div>
         </div>
     </section>
@@ -545,7 +522,7 @@
             </div>
             <div style="flex:0 0 320px">
                 <!-- Replaced books.jpg with a placeholder image -->
-                <img src="https://placehold.co/320x200/4f46e5/ffffff?text=BOOKS+COLLECTION" alt="Books Collection" style="width:100%;border-radius:12px;box-shadow:0 12px 30px rgba(15,23,42,0.06)">
+                <img src="books.jpg" alt="Books Collection" style="width:100%;border-radius:12px;box-shadow:0 12px 30px rgba(15,23,42,0.06)">
             </div>
         </div>
     </section>
@@ -567,7 +544,7 @@
             </div>
             <div style="flex:0 0 320px">
                 <!-- Reused placeholder image -->
-                <img src="https://placehold.co/320x200/7c3aed/ffffff?text=STUDY+AREA" alt="Library Sitting Area" style="width:100%;border-radius:12px;box-shadow:0 12px 30px rgba(15,23,42,0.06)">
+                <img src="sitting-area.jpg" alt="Library Sitting Area" style="width:100%;border-radius:12px;box-shadow:0 12px 30px rgba(15,23,42,0.06)">
             </div>
         </div>
     </section>
@@ -606,26 +583,15 @@
         <div class="inner">
             <div style="display:flex;gap:12px;align-items:center">
                 <!-- Replaced logo.svg with a placeholder image -->
-                <img src="https://placehold.co/44x44/4f46e5/ffffff?text=L" alt="logo" style="height:44px;width:44px;border-radius:8px">
+                <img src="logo.svg" alt="logo" style="height:44px;width:44px;border-radius:8px">
                 <div>
                     <div style="font-weight:700">Sir M V Science College Library</div>
                     <div style="font-size:13px;color:#9aa4b2">Knowledge hub for students & faculty</div>
                 </div>
             </div>
             <div style="color:#9aa4b2;font-size:14px">Sir. M.V. Government Science College, Bommanakatte, Bhadravathi - 577302</div>
-            <div style="display:flex;gap:12px;align-items:center">
-                <a class="social-btn fb" href="{{ facebook_url }}" target="_blank" aria-label="Facebook">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 12.07C22 6.48 17.52 2 11.93 2S2 6.48 2 12.07C2 17.09 5.64 21.26 10.36 22v-7.02H7.9v-2.92h2.46v-2.22c0-2.44 1.46-3.79 3.6-3.79 1.04 0 2.12.18 2.12.18v2.33h-1.19c-1.17 0-1.54.73-1.54 1.48v1.98h2.62l-.42 2.92h-2.2V22C18.36 21.26 22 17.09 22 12.07z" fill="white"/></svg>
-        </a>
-
-        <a class="social-btn ig" href="{{ instagram_url }}" target="_blank" aria-label="Instagram">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm5 6.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9zm6.5-.5a1 1 0 11-2 0 1 1 0 012 0z" fill="white"/></svg>
-        </a>
-
-        <a class="social-btn tw" href="{{ twitter_url }}" target="_blank" aria-label="Twitter">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 5.92c-.63.28-1.3.47-2.01.56.72-.43 1.27-1.12 1.53-1.94-.68.4-1.43.7-2.23.86A3.49 3.49 0 0016.5 4c-1.93 0-3.5 1.6-3.5 3.57 0 .28.03.55.09.81-2.91-.15-5.49-1.58-7.21-3.75-.3.5-.47 1.08-.47 1.69 0 1.16.61 2.19 1.54 2.79-.56-.02-1.09-.18-1.55-.42v.04c0 1.64 1.15 3.01 2.67 3.33-.28.07-.58.11-.88.11-.21 0-.42-.02-.62-.06.42 1.31 1.66 2.26 3.13 2.29A6.98 6.98 0 012 19.54a9.8 9.8 0 005.29 1.56c6.35 0 9.83-5.6 9.83-10.46v-.48c.68-.5 1.27-1.12 1.74-1.83-.63.28-1.3.47-2.01.56z" fill="white"/></svg>
-        </a>
-                <a class="email-btn" href="mailto:sirmvsciencebdvt@gmail.com" aria-label="Email">Email Us</a>
+            <div style="display:flex;gap:12px;align-items:center" id="footer-email">
+                <!-- Email button will be populated by JavaScript -->
             </div>
         </div>
     </footer>
@@ -655,6 +621,46 @@
                 // Close via Backdrop (clicking the shaded area)
                 backdrop.addEventListener('click', toggleDrawer);
             }
+
+            // 4. Load dynamic footer content
+            async function loadFooterContent() {
+                try {
+                    const response = await fetch('content/data.json');
+                    if (!response.ok) return;
+                    
+                    const siteData = await response.json();
+                    if (!siteData || !siteData.footer) return;
+
+                    const footer = siteData.footer;
+                    
+                    // Update email in drawer menu
+                    const emailBtn = document.querySelector('.drawer-menu .email-btn');
+                    if (emailBtn && footer.primary_email) {
+                        emailBtn.href = `mailto:${footer.primary_email}`;
+                        emailBtn.textContent = `Email: ${footer.primary_email}`;
+                    }
+
+                    // Update email in footer
+                    const footerEmailContainer = document.getElementById('footer-email');
+                    if (footerEmailContainer && footer.primary_email) {
+                        footerEmailContainer.innerHTML = `
+                            <a class="email-btn" href="mailto:${footer.primary_email}" aria-label="Email">Email Us</a>
+                        `;
+                    }
+                } catch (error) {
+                    console.error('Error loading footer content:', error);
+                    // Fallback to default email
+                    const footerEmailContainer = document.getElementById('footer-email');
+                    if (footerEmailContainer) {
+                        footerEmailContainer.innerHTML = `
+                            <a class="email-btn" href="mailto:sirmvsciencebdvt@gmail.com" aria-label="Email">Email Us</a>
+                        `;
+                    }
+                }
+            }
+
+            // Load footer content
+            loadFooterContent();
         });
     </script>
 </body>

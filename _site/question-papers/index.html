@@ -21,6 +21,7 @@
       justify-content: center;
       gap: 10px;
       margin: 20px 0;
+      position: relative;
     }
 
     .qp-search-bar input,
@@ -49,6 +50,48 @@
     .qp-search-bar select:focus {
       border-color: var(--primary, #4f46e5);
       box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
+    }
+
+    /* Live Search Suggestions */
+    .qp-search-suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      max-height: 300px;
+      overflow-y: auto;
+      z-index: 100;
+      display: none;
+      border: 1px solid #e2e8f0;
+    }
+
+    .qp-suggestion-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .qp-suggestion-item:hover {
+      background-color: #f8fafc;
+    }
+
+    .qp-suggestion-item:last-child {
+      border-bottom: none;
+    }
+
+    .qp-suggestion-title {
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .qp-suggestion-meta {
+      font-size: 0.85rem;
+      color: var(--muted);
     }
 
     /* Department Cards Grid */
@@ -161,6 +204,26 @@
       .qp-link-list {
         padding: 12px;
       }
+      .qp-search-bar {
+        flex-direction: column;
+      }
+      .qp-search-bar input,
+      .qp-search-bar select {
+        width: 100%;
+        max-width: none;
+      }
+    }
+
+    /* Ensure active state works on Netlify */
+    .nav a.active {
+      background: linear-gradient(90deg, #4f46e5, #7c3aed) !important;
+      color: white !important;
+      box-shadow: 0 10px 28px rgba(99, 102, 241, 0.14) !important;
+    }
+    
+    .drawer-menu a.active {
+      background: linear-gradient(90deg, #4f46e5, #7c3aed) !important;
+      color: white !important;
     }
   </style>
 </head>
@@ -191,7 +254,7 @@
     <div class="drawer-menu">
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
-      <a href="question-papers.html">Question Papers</a>
+      <a href="question-papers.html" class="active">Question Papers</a>
       <a href="staff.html">Staff</a>
       <a href="announcements.html">Announcements</a>
       <a href="contact.html">Contact</a>
@@ -207,10 +270,12 @@
 
     <!-- Search + Filter Bar -->
     <div class="qp-search-bar">
-      <input type="text" id="qpSearchInput" placeholder="Search by keyword or subject...">
+      <input type="text" id="qpSearchInput" placeholder="Search question papers by title, department, or tag...">
       <select id="qpDeptFilter">
         <option value="all">All Departments</option>
       </select>
+      <!-- Live Search Suggestions Container -->
+      <div id="qpSearchSuggestions" class="qp-search-suggestions"></div>
     </div>
 
     <!-- Department Grid -->
@@ -222,7 +287,7 @@
     <div id="qp-detail-container"></div>
   </section>
 
- <div class="header-spacer"></div> 
+  <div class="footer-pad"></div>
  
   <footer class="site-footer" role="contentinfo">
     <div class="inner">
@@ -236,6 +301,9 @@
       <div style="color:#9aa4b2;font-size:14px">
         Sir. M.V. Government Science College, Bommanakatte, Bhadravathi - 577302
       </div>
+      <div style="display:flex;gap:12px;align-items:center" id="footer-email">
+        <!-- Email button will be populated by JavaScript -->
+      </div>
     </div>
   </footer>
 
@@ -246,9 +314,141 @@
       const detailContainer = document.getElementById('qp-detail-container');
       const searchInput = document.getElementById('qpSearchInput');
       const deptFilter = document.getElementById('qpDeptFilter');
+      const suggestionsContainer = document.getElementById('qpSearchSuggestions');
       const jsonPath = 'content/qpapers.json';
 
       let allDepartments = [];
+      let allPapers = []; // For live search functionality
+
+      // Load dynamic footer content
+      async function loadFooterContent() {
+        try {
+          const response = await fetch('content/data.json');
+          if (!response.ok) return;
+          
+          const siteData = await response.json();
+          if (!siteData || !siteData.footer) return;
+
+          const footer = siteData.footer;
+          
+          // Update email in drawer menu
+          const emailBtn = document.querySelector('.drawer-menu .email-btn');
+          if (emailBtn && footer.primary_email) {
+            emailBtn.href = `mailto:${footer.primary_email}`;
+            emailBtn.textContent = `Email: ${footer.primary_email}`;
+          }
+
+          // Update email in footer
+          const footerEmailContainer = document.getElementById('footer-email');
+          if (footerEmailContainer && footer.primary_email) {
+            footerEmailContainer.innerHTML = `
+              <a class="email-btn" href="mailto:${footer.primary_email}" aria-label="Email">Email Us</a>
+            `;
+          }
+        } catch (error) {
+          console.error('Error loading footer content:', error);
+          // Fallback to default email
+          const footerEmailContainer = document.getElementById('footer-email');
+          if (footerEmailContainer) {
+            footerEmailContainer.innerHTML = `
+              <a class="email-btn" href="mailto:sirmvsciencebdvt@gmail.com" aria-label="Email">Email Us</a>
+            `;
+          }
+        }
+      }
+
+      // Build search index from all papers
+      function buildSearchIndex() {
+        allPapers = [];
+        allDepartments.forEach(dept => {
+          if (dept.papers && dept.papers.length) {
+            dept.papers.forEach(paper => {
+              allPapers.push({
+                ...paper,
+                department: dept.department,
+                departmentTagline: dept.tagline
+              });
+            });
+          }
+        });
+      }
+
+      // Live search functionality
+      function performLiveSearch(query) {
+        if (!query.trim()) {
+          suggestionsContainer.style.display = 'none';
+          return [];
+        }
+
+        const searchTerm = query.toLowerCase().trim();
+        const results = allPapers.filter(paper => {
+          return (
+            paper.title.toLowerCase().includes(searchTerm) ||
+            paper.department.toLowerCase().includes(searchTerm) ||
+            (paper.tag && paper.tag.toLowerCase().includes(searchTerm)) ||
+            (paper.departmentTagline && paper.departmentTagline.toLowerCase().includes(searchTerm))
+          );
+        }).slice(0, 8); // Limit to 8 results
+
+        return results;
+      }
+
+      // Display search suggestions
+      function showSearchSuggestions(results) {
+        suggestionsContainer.innerHTML = '';
+        
+        if (results.length === 0) {
+          suggestionsContainer.innerHTML = `
+            <div class="qp-suggestion-item">
+              <div class="qp-suggestion-title">No results found</div>
+              <div class="qp-suggestion-meta">Try different keywords</div>
+            </div>
+          `;
+        } else {
+          results.forEach(paper => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.className = 'qp-suggestion-item';
+            suggestionItem.innerHTML = `
+              <div class="qp-suggestion-title">${paper.title}</div>
+              <div class="qp-suggestion-meta">${paper.department} • ${paper.tag || 'Download'}</div>
+            `;
+            
+            suggestionItem.addEventListener('click', () => {
+              // Find and select the department card for this paper
+              const department = allDepartments.find(dept => dept.department === paper.department);
+              if (department) {
+                // Find and activate the corresponding card
+                const cards = document.querySelectorAll('.qp-card');
+                cards.forEach((card, index) => {
+                  if (card.querySelector('.qp-card-title').textContent === paper.department) {
+                    card.classList.add('active');
+                    renderPaperList(department);
+                    detailContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                  } else {
+                    card.classList.remove('active');
+                  }
+                });
+                
+                // Also filter the grid to show only this department
+                searchInput.value = '';
+                deptFilter.value = paper.department;
+                applyFilters();
+              }
+              
+              suggestionsContainer.style.display = 'none';
+            });
+            
+            suggestionsContainer.appendChild(suggestionItem);
+          });
+        }
+        
+        suggestionsContainer.style.display = 'block';
+      }
+
+      // Hide suggestions when clicking outside
+      function hideSuggestions() {
+        suggestionsContainer.style.display = 'none';
+      }
 
       const renderPaperList = (dept) => {
         let html = `
@@ -330,8 +530,28 @@
         renderCards(filterData());
       };
 
-      searchInput.addEventListener('input', applyFilters);
+      // Event listeners
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value;
+        applyFilters();
+        
+        // Show live search suggestions
+        if (query.length > 2) {
+          const results = performLiveSearch(query);
+          showSearchSuggestions(results);
+        } else {
+          hideSuggestions();
+        }
+      });
+
       deptFilter.addEventListener('change', applyFilters);
+
+      // Hide suggestions when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.qp-search-bar')) {
+          hideSuggestions();
+        }
+      });
 
       // Fetch JSON data
       fetch(jsonPath)
@@ -342,13 +562,16 @@
           return res.json();
         })
         .then(data => {
-          // FIX: Extract departments from the root property
+          // Extract departments from the root property
           allDepartments = data.departments || [];
           
           if (allDepartments.length === 0) {
             gridContainer.innerHTML = '<div class="loading-message">No question papers available.</div>';
             return;
           }
+
+          // Build search index
+          buildSearchIndex();
 
           renderCards(allDepartments);
 
@@ -366,6 +589,9 @@
             document.querySelector('.qp-card')?.classList.add('active');
             renderPaperList(allDepartments[0]);
           }
+
+          // Load footer content
+          loadFooterContent();
         })
         .catch(error => {
           console.error('Error loading question papers:', error);
