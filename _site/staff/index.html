@@ -114,6 +114,12 @@
             border-radius: 2px;
         }
 
+        .staff-contact-info {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #f1f5f9;
+        }
+
         .staff-email {
             display: inline-flex;
             align-items: center;
@@ -127,7 +133,7 @@
             font-size: 0.95rem;
             transition: all 0.3s ease;
             box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
-            margin-top: 15px;
+            margin-bottom: 12px;
         }
 
         .staff-email:hover {
@@ -139,6 +145,15 @@
         .staff-email::before {
             content: '✉️';
             font-size: 1.1rem;
+        }
+
+        .staff-phone {
+            color: #64748b;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
         .loading-message {
@@ -167,16 +182,28 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Navbar Active State Fix */
-        .nav a.active {
+        /* Navbar Active State Fix - Enhanced for Netlify */
+        .navbar .nav a.active,
+        .navbar-wrap .navbar .nav a.active,
+        .nav a[href="staff.html"].active {
             background: linear-gradient(90deg, #4f46e5, #7c3aed) !important;
             color: white !important;
             box-shadow: 0 10px 28px rgba(99, 102, 241, 0.14) !important;
         }
         
-        .drawer-menu a.active {
+        .drawer-menu a.active,
+        .drawer .drawer-menu a.active,
+        .drawer-menu a[href="staff.html"].active {
             background: linear-gradient(90deg, #4f46e5, #7c3aed) !important;
             color: white !important;
+        }
+
+        /* Force active state with higher specificity */
+        body .navbar .nav a.active,
+        body .drawer-menu a.active {
+            background: linear-gradient(90deg, #4f46e5, #7c3aed) !important;
+            color: white !important;
+            box-shadow: 0 10px 28px rgba(99, 102, 241, 0.14) !important;
         }
 
         /* Responsive Design */
@@ -202,6 +229,11 @@
             
             .staff-designation {
                 font-size: 1rem;
+            }
+            
+            .staff-contact-info {
+                margin-top: 20px;
+                padding-top: 15px;
             }
         }
 
@@ -398,8 +430,11 @@
                         </div>
                         <div class="staff-name">${member.name}</div>
                         <div class="staff-designation">${member.role}</div>
-                        ${member.email ? `<a href="mailto:${member.email}" class="staff-email">${member.email}</a>` : ''}
-                        ${member.phone ? `<div style="margin-top:10px;color:#64748b;font-size:0.9rem;">📞 ${member.phone}</div>` : ''}
+                        
+                        <div class="staff-contact-info">
+                            ${member.email ? `<a href="mailto:${member.email}" class="staff-email">${member.email}</a>` : ''}
+                            ${member.phone ? `<div class="staff-phone">📞 ${member.phone}</div>` : ''}
+                        </div>
                     `;
                     
                     staffGridContainer.appendChild(card);

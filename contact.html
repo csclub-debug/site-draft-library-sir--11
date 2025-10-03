@@ -163,7 +163,6 @@
     }
 
     .social-icon.fb { background: linear-gradient(135deg, #1877f2, #0a58ca); }
-    .social-icon.ig { background: linear-gradient(135deg, #f58529, #dd2a7b, #833ab4); }
     .social-icon.tw { background: linear-gradient(135deg, #1DA1F2, #0d8bf2); }
 
     .social-media-card h3 {
@@ -192,14 +191,20 @@
       box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
     }
 
-    /* Navbar Active State Fix */
-    .nav a.active {
+    /* Navbar Active State Fix - Enhanced for Netlify */
+    .navbar .nav a.active,
+    .navbar-wrap .navbar .nav a.active,
+    .nav a[href="contact.html"].active,
+    body .navbar .nav a.active,
+    body .drawer-menu a.active {
       background: linear-gradient(90deg, #4f46e5, #7c3aed) !important;
       color: white !important;
       box-shadow: 0 10px 28px rgba(99, 102, 241, 0.14) !important;
     }
     
-    .drawer-menu a.active {
+    .drawer-menu a.active,
+    .drawer .drawer-menu a.active,
+    .drawer-menu a[href="contact.html"].active {
       background: linear-gradient(90deg, #4f46e5, #7c3aed) !important;
       color: white !important;
     }
@@ -465,21 +470,6 @@
               <h3>Facebook</h3>
               <p class="muted">Follow us for latest updates and events</p>
               <a href="${footer.facebook_url}" target="_blank" rel="noopener noreferrer" class="social-link">
-                Follow Us
-              </a>
-            </div>
-          `;
-        }
-
-        // Instagram Card
-        if (footer.instagram_url && footer.instagram_url !== 'https://instagram.com/yourprofile') {
-          hasSocialLinks = true;
-          socialMediaGrid.innerHTML += `
-            <div class="social-media-card">
-              <div class="social-icon ig">📷</div>
-              <h3>Instagram</h3>
-              <p class="muted">See photos and stories from our library</p>
-              <a href="${footer.instagram_url}" target="_blank" rel="noopener noreferrer" class="social-link">
                 Follow Us
               </a>
             </div>
