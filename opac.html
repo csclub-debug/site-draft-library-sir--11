@@ -6,7 +6,7 @@
   <title>OPAC (Online Catalog) - Sir M V Library</title>
   <link rel="stylesheet" href="assets/style.css" />
   <style>
-    /* Minimal inline safety styles for readability (your main CSS will override) */
+    /* Minimal inline safety styles */
     .search-box { display:flex; gap:8px; align-items:center; max-width:900px; }
     #opacSearchInput { flex:1; padding:8px; font-size:15px; }
     #opacSearchBtn { padding:8px 12px; }
@@ -14,6 +14,9 @@
     .results-list { display:block; }
     .pagination button { padding:6px 8px; }
     .detail-panel { margin-top:8px; }
+    .site-footer .inner { display:flex; flex-direction:column; gap:12px; padding:18px; background:#0f1724; color:#fff; }
+    .footer-top { display:flex; gap:12px; align-items:center; justify-content:space-between; }
+    .email-btn { display:inline-block; padding:8px 10px; background:#1f6feb; color:#fff; border-radius:6px; text-decoration:none; }
   </style>
 </head>
 <body>
@@ -29,54 +32,47 @@
     <div id="search-results"></div>
   </section>
 
-  <div class="footer-pad"></div>
-
-  <!-- 🔽 Footer updated to match staff.html -->
   <footer class="site-footer" role="contentinfo">
     <div class="inner">
       <div class="footer-top">
-        <div class="footer-logo">
-          <img src="logo.svg" alt="Library Logo" />
-          <div class="footer-info">
-            <div class="footer-title">Sir M V Science College Library</div>
-            <div class="footer-subtitle">Library & Informatics Centre</div>
+        <div style="display:flex;gap:12px;align-items:center">
+          <img src="logo.svg" alt="logo" style="height:44px;width:44px;border-radius:8px" />
+          <div>
+            <div style="font-weight:700">Sir M V Science College Library</div>
+            <div style="font-size:13px;color:#cbd5e1">Library & Informatics Centre</div>
           </div>
         </div>
-        <div class="footer-contact">
-          <a id="footer-email" class="footer-email-btn" href="mailto:library@example.com" aria-label="Email the library">
-            library@example.com
-          </a>
+
+        <div>
+          <a id="footer-email" class="email-btn" href="mailto:library@example.com" aria-label="Email the library">Email Us</a>
         </div>
       </div>
-      <div class="footer-bottom">
+
+      <div style="color:#9aa4b2;font-size:14px">
         Sir. M.V. Government Science College, Bommanakatte, Bhadravathi - 577302
       </div>
     </div>
   </footer>
-  <!-- 🔼 End updated footer -->
 
-  <!-- Main script -->
   <script>
   (function () {
     'use strict';
 
     // ---------- CONFIG ----------
-    const INDEX_URL = 'content/books_index.json';            // compact index (lightweight)
-    const MAPPING_URL = 'content/accession_to_part.json';   // accession -> chunk filename
-    const PARTS_BASE = 'content/';                          // where chunk files live
-    const CMS_DATA_URL = 'content/data.json';               // Netlify CMS file for footer.primary_email
-    const PER_PAGE = 30;                                    // results per page
+    const INDEX_URL = 'content/books_index.json';
+    const MAPPING_URL = 'content/accession_to_part.json';
+    const PARTS_BASE = 'content/';
+    const CMS_DATA_URL = 'content/data.json';
+    const PER_PAGE = 30;
     const MIN_SEARCH_CHARS = 3;
     // ----------------------------
 
-    // DOM refs
     const searchInput = document.getElementById('opacSearchInput');
     const searchBtn = document.getElementById('opacSearchBtn');
     const searchResults = document.getElementById('search-results');
     const searchMessage = document.getElementById('search-message');
     const footerEmailLink = document.getElementById('footer-email');
 
-    // App state
     let lastResults = [];
     let currentPage = 1;
     let worker = null;
@@ -84,7 +80,7 @@
     let mapping = null;
     const fetchedPartsCache = {};
 
-    // ---------------- utilities ----------------
+    // -------------- utilities --------------
     function debounce(fn, wait) {
       let t;
       return function (...args) {
@@ -92,38 +88,26 @@
         t = setTimeout(() => fn.apply(this, args), wait);
       };
     }
-
     function escapeHtml(s = '') {
-      return String(s)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
     function escapeAttr(s = '') {
-      return String(s).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      return String(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;');
     }
 
-    // ----------------- CMS footer loader -----------------
+    // -------------- Footer Email Loader --------------
     async function loadSiteDataAndBindEmail() {
       try {
         const res = await fetch(CMS_DATA_URL, {cache: 'no-cache'});
-        if (!res.ok) throw new Error('content/data.json not found');
         const data = await res.json();
-
-        // The Netlify CMS file structure should include footer.primary_email as per config.yml
         let email = '';
-        if (data && typeof data === 'object') {
-          if (data.footer && typeof data.footer === 'object' && data.footer.primary_email) {
-            email = String(data.footer.primary_email).trim();
-          } else if (data.primary_email) {
-            email = String(data.primary_email).trim();
-          } else if (data.data && data.data.footer && data.data.footer.primary_email) {
-            email = String(data.data.footer.primary_email).trim();
-          }
-        }
+
+        if (data?.footer?.primary_email) email = data.footer.primary_email.trim();
+        else if (data?.primary_email) email = data.primary_email.trim();
+        else if (data?.data?.footer?.primary_email) email = data.data.footer.primary_email.trim();
+
         setFooterEmail(email);
-      } catch (err) {
-        console.warn('Could not load CMS data.json for footer email:', err);
+      } catch {
         setFooterEmail('');
       }
     }
@@ -131,18 +115,16 @@
     function setFooterEmail(email) {
       if (!footerEmailLink) return;
       if (email) {
-        const href = email.indexOf('mailto:') === 0 ? email : 'mailto:' + email;
-        footerEmailLink.setAttribute('href', href);
+        footerEmailLink.href = email.startsWith('mailto:') ? email : 'mailto:' + email;
         footerEmailLink.textContent = email;
         footerEmailLink.setAttribute('aria-label', 'Email ' + email);
       } else {
-        footerEmailLink.setAttribute('href', 'mailto:library@example.com');
-        footerEmailLink.textContent = 'library@example.com';
-        footerEmailLink.setAttribute('aria-label', 'Email the library');
+        footerEmailLink.href = 'mailto:library@example.com';
+        footerEmailLink.textContent = 'Email Us';
       }
     }
 
-    // ---------------- Web Worker (search) ----------------
+    // -------------- Web Worker (Search) --------------
     function createSearchWorker() {
       const code = `
         self.index = [];
@@ -150,80 +132,70 @@
           const msg = e.data;
           if (msg.cmd === 'loadIndex') {
             try {
-              const resp = await fetch(msg.url, {cache:'no-cache'});
+              const url = new URL(msg.url, self.location.origin).href;
+              const resp = await fetch(url, {cache:'no-cache'});
               const json = await resp.json();
               self.index = json.books || [];
-              for (let i=0;i<self.index.length;i++) {
-                const b = self.index[i];
-                const s = [
-                  b.accession_no || '',
-                  b.title || '',
-                  b.author || '',
-                  b.subject || '',
-                  b.publisher || '',
-                  b.isbn || ''
-                ].join(' ');
-                b.search = s.toLowerCase();
+              for (const b of self.index) {
+                if (!b.search) {
+                  const s = [b.accession_no,b.title,b.author,b.subject,b.publisher,b.isbn].join(' ');
+                  b.search = s.toLowerCase();
+                }
               }
               self.postMessage({cmd:'loaded', count:self.index.length});
             } catch (err) {
-              self.postMessage({cmd:'error', error: String(err)});
+              self.postMessage({cmd:'error', error:String(err)});
             }
           } else if (msg.cmd === 'search') {
-            const q = (msg.query || '').trim().toLowerCase();
-            if (q.length < (msg.minChars || 3)) {
-              self.postMessage({cmd:'too_short', len:q.length});
-              return;
-            }
-            const results = [];
-            for (let i=0;i<self.index.length;i++) {
-              const b = self.index[i];
-              if (b.search && b.search.indexOf(q) !== -1) {
-                results.push(b);
-              }
-            }
-            self.postMessage({cmd:'results', results:results, query:q});
+            const q = (msg.query||'').trim().toLowerCase();
+            const min = msg.minChars||3;
+            if (!q) return self.postMessage({cmd:'results', results:[]});
+            if (q.length<min) return self.postMessage({cmd:'too_short', len:q.length});
+            const results = self.index.filter(b => b.search.includes(q));
+            self.postMessage({cmd:'results', results, query:q});
           }
         };
       `;
-      const blob = new Blob([code], {type: 'application/javascript'});
-      return new Worker(URL.createObjectURL(blob));
+      return new Worker(URL.createObjectURL(new Blob([code], {type: 'application/javascript'})));
     }
 
     function initWorkerAndLoadIndex() {
       worker = createSearchWorker();
-      worker.onmessage = function(e) {
+      worker.onmessage = (e) => {
         const msg = e.data;
-        if (msg.cmd === 'loaded') {
-          workerReady = true;
-          searchMessage.style.color = '';
-          searchMessage.textContent = 'Book index loaded (' + msg.count + ' records). Enter at least ' + MIN_SEARCH_CHARS + ' characters to search.';
-        } else if (msg.cmd === 'error') {
-          searchMessage.style.color = 'red';
-          searchMessage.textContent = 'Failed to load index: ' + msg.error;
-          console.error('Worker error', msg.error);
-        } else if (msg.cmd === 'too_short') {
-          searchMessage.style.color = '';
-          searchMessage.textContent = 'Please enter at least ' + MIN_SEARCH_CHARS + ' characters to search.';
-          renderResults([]);
-        } else if (msg.cmd === 'results') {
-          lastResults = msg.results || [];
-          currentPage = 1;
-          renderResults(lastResults, currentPage);
+        switch (msg.cmd) {
+          case 'loaded':
+            workerReady = true;
+            searchMessage.textContent = `Book index loaded (${msg.count} records). Enter at least ${MIN_SEARCH_CHARS} characters to search.`;
+            break;
+          case 'error':
+            searchMessage.style.color = 'red';
+            searchMessage.textContent = 'Failed to load index: ' + msg.error;
+            break;
+          case 'too_short':
+            searchMessage.textContent = `Please enter at least ${MIN_SEARCH_CHARS} characters to search.`;
+            renderResults([]);
+            break;
+          case 'results':
+            lastResults = msg.results || [];
+            currentPage = 1;
+            renderResults(lastResults, currentPage);
+            break;
         }
       };
       worker.postMessage({cmd: 'loadIndex', url: INDEX_URL});
     }
 
-    // ---------------- render & pagination ----------------
+    // -------------- Rendering --------------
     function renderResults(results, page = 1) {
       searchResults.innerHTML = '';
-      if (!results || results.length === 0) {
+      if (!results.length) {
         searchMessage.style.display = 'block';
-        searchMessage.textContent = results && results.length === 0 ? 'No books found matching your search term.' : 'Enter a keyword above to start searching.';
+        searchMessage.textContent = 'No books found matching your search.';
         return;
       }
       searchMessage.style.display = 'none';
+
       const totalPages = Math.ceil(results.length / PER_PAGE);
       const start = (page - 1) * PER_PAGE;
       const end = Math.min(start + PER_PAGE, results.length);
@@ -232,18 +204,18 @@
       const container = document.createElement('div');
       container.className = 'results-list';
 
-      for (let b of slice) {
+      for (const b of slice) {
         const c = document.createElement('div');
         c.className = 'book-card';
         c.style.padding = '10px';
         c.style.borderBottom = '1px solid #eee';
 
         c.innerHTML = `
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+          <div style="display:flex;justify-content:space-between;gap:12px">
             <div>
               <div style="font-weight:700">${escapeHtml(b.title || 'Untitled')}</div>
               <div style="font-size:13px">Author: ${escapeHtml(b.author || 'N/A')}</div>
-              <div style="font-size:13px">Publisher: ${escapeHtml(b.publisher || 'N/A')} ${b.year ? ' — ' + escapeHtml(b.year) : ''}</div>
+              <div style="font-size:13px">Publisher: ${escapeHtml(b.publisher || 'N/A')} ${b.year ? '— ' + escapeHtml(b.year) : ''}</div>
               <div style="font-size:12px;color:#666">Subject: ${escapeHtml(b.subject || 'N/A')}</div>
             </div>
             <div style="text-align:right">
@@ -252,73 +224,118 @@
                 <button class="view-btn" data-acc="${escapeAttr(b.accession_no)}">View Details</button>
               </div>
             </div>
-          </div>
-        `;
+          </div>`;
         container.appendChild(c);
       }
 
       searchResults.appendChild(container);
 
-      // pagination
       if (totalPages > 1) {
         const nav = document.createElement('div');
         nav.className = 'pagination';
         nav.style.marginTop = '12px';
         nav.style.display = 'flex';
         nav.style.gap = '8px';
-        nav.style.alignItems = 'center';
 
         const prev = document.createElement('button');
         prev.textContent = 'Previous';
         prev.disabled = page <= 1;
-        prev.onclick = () => { currentPage = page - 1; renderResults(results, currentPage); };
+        prev.onclick = () => renderResults(results, page - 1);
 
         const next = document.createElement('button');
         next.textContent = 'Next';
         next.disabled = page >= totalPages;
-        next.onclick = () => { currentPage = page + 1; renderResults(results, currentPage); };
+        next.onclick = () => renderResults(results, page + 1);
 
         const info = document.createElement('span');
         info.textContent = `Page ${page} of ${totalPages} — ${results.length} results`;
 
-        nav.appendChild(prev);
-        nav.appendChild(info);
-        nav.appendChild(next);
-
+        nav.append(prev, info, next);
         searchResults.appendChild(nav);
       }
+
+      searchResults.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const acc = btn.getAttribute('data-acc');
+          if (acc) await showFullRecord(acc, btn);
+        });
+      });
     }
 
-    // ---------------- actions ----------------
+    // -------------- Mapping + Chunk Fetch --------------
+    async function ensureMapping() {
+      if (mapping) return mapping;
+      const res = await fetch(MAPPING_URL, {cache:'no-cache'});
+      mapping = await res.json();
+      return mapping;
+    }
+
+    async function fetchPart(partName) {
+      if (!partName) return null;
+      if (fetchedPartsCache[partName]) return fetchedPartsCache[partName];
+      const res = await fetch(PARTS_BASE + partName);
+      const json = await res.json();
+      fetchedPartsCache[partName] = json.books || [];
+      return fetchedPartsCache[partName];
+    }
+
+    async function showFullRecord(accession, btn) {
+      const map = await ensureMapping();
+      const partName = map[accession];
+      if (!partName) return alert('Record not found.');
+      const part = await fetchPart(partName);
+      const rec = part.find(r => r.accession_no === accession);
+      if (!rec) return alert('Record not found in chunk.');
+
+      const card = btn.closest('.book-card');
+      card.querySelectorAll('.detail-panel').forEach(n => n.remove());
+
+      const d = document.createElement('div');
+      d.className = 'detail-panel';
+      d.style.padding = '10px';
+      d.style.background = '#fafafa';
+      d.style.border = '1px solid #eee';
+      d.innerHTML = `
+        <div style="font-weight:700">${escapeHtml(rec.title)}</div>
+        <div>Author: ${escapeHtml(rec.author || 'N/A')}</div>
+        <div>Publisher: ${escapeHtml(rec.publisher || 'N/A')}</div>
+        <div>ISBN: ${escapeHtml(rec.isbn || 'N/A')}</div>
+        <div>Accession No: ${escapeHtml(rec.accession_no)}</div>
+        <pre style="max-height:220px;overflow:auto;background:#fff;padding:8px;border:1px solid #eee;">
+${escapeHtml(JSON.stringify(rec, null, 2))}</pre>`;
+      card.appendChild(d);
+      d.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+
+    // -------------- Search Actions --------------
     const doSearch = debounce((q) => {
-      if (!workerReady) {
-        searchMessage.style.color = '';
-        searchMessage.textContent = 'Index still loading...';
-        return;
-      }
+      if (!workerReady) return searchMessage.textContent = 'Index still loading...';
       worker.postMessage({cmd: 'search', query: q, minChars: MIN_SEARCH_CHARS});
     }, 200);
 
-    // events
     searchInput.addEventListener('input', (e) => {
-      const q = e.target.value || '';
-      if (!q || q.trim() === '') {
-        searchMessage.style.display = 'block';
-        searchMessage.textContent = 'Enter a keyword above to start searching.';
+      const q = e.target.value.trim();
+      if (!q) {
+        searchMessage.textContent = 'Enter a keyword to search.';
         renderResults([]);
         return;
       }
       doSearch(q);
     });
-    searchBtn.addEventListener('click', () => { doSearch(searchInput.value || ''); });
-    searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); doSearch(searchInput.value || ''); } });
+    searchBtn.addEventListener('click', () => doSearch(searchInput.value.trim()));
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        doSearch(searchInput.value.trim());
+      }
+    });
 
-    // ---------------- init ----------------
+    // -------------- Init --------------
     (function init() {
       searchMessage.textContent = 'Loading compact book index...';
       initWorkerAndLoadIndex();
       loadSiteDataAndBindEmail();
-      window.addEventListener('unload', () => { if (worker) worker.terminate(); });
+      window.addEventListener('unload', () => worker?.terminate());
     })();
 
   })();

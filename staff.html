@@ -89,6 +89,7 @@
             margin: 15px 0 8px;
             background: linear-gradient(135deg, #4f46e5, #7c3aed);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
@@ -182,88 +183,23 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Navbar Active State Fix - Enhanced for Netlify */
+        /* Navbar Active State Fix */
         .navbar .nav a.active,
-        .navbar-wrap .navbar .nav a.active,
-        .nav a[href="staff.html"].active {
-            background: linear-gradient(90deg, #4f46e5, #7c3aed) !important;
-            color: white !important;
-            box-shadow: 0 10px 28px rgba(99, 102, 241, 0.14) !important;
-        }
-        
-        .drawer-menu a.active,
-        .drawer .drawer-menu a.active,
-        .drawer-menu a[href="staff.html"].active {
-            background: linear-gradient(90deg, #4f46e5, #7c3aed) !important;
-            color: white !important;
-        }
-
-        /* Force active state with higher specificity */
-        body .navbar .nav a.active,
-        body .drawer-menu a.active {
+        .drawer-menu a.active {
             background: linear-gradient(90deg, #4f46e5, #7c3aed) !important;
             color: white !important;
             box-shadow: 0 10px 28px rgba(99, 102, 241, 0.14) !important;
         }
 
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 768px) {
             .staff-grid {
                 grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
                 gap: 20px;
                 padding: 15px 0;
             }
-            
-            .staff-card {
-                padding: 30px 20px 25px;
-            }
-            
-            .staff-card-img-wrap {
-                width: 120px;
-                height: 120px;
-            }
-            
-            .staff-name {
-                font-size: 1.3rem;
-            }
-            
-            .staff-designation {
-                font-size: 1rem;
-            }
-            
-            .staff-contact-info {
-                margin-top: 20px;
-                padding-top: 15px;
-            }
         }
 
-        @media (max-width: 480px) {
-            .staff-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            
-            .staff-card {
-                padding: 25px 15px 20px;
-                margin: 0 10px;
-            }
-            
-            .staff-card-img-wrap {
-                width: 100px;
-                height: 100px;
-            }
-            
-            .staff-name {
-                font-size: 1.2rem;
-            }
-            
-            .staff-email {
-                padding: 10px 20px;
-                font-size: 0.9rem;
-            }
-        }
-
-        /* Section Styling */
         .section {
             max-width: 1200px;
             margin: 0 auto;
@@ -276,16 +212,8 @@
             background: linear-gradient(135deg, #4f46e5, #7c3aed);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
             font-size: 2.5rem;
             font-weight: 800;
-        }
-
-        @media (max-width: 768px) {
-            .section h1 {
-                font-size: 2rem;
-                margin-bottom: 30px;
-            }
         }
     </style>
 </head>
@@ -304,7 +232,7 @@
             <a href="index.html">Home</a>
             <a href="about.html">About</a>
             <a href="question-papers.html">Question Papers</a>
-            <a href="staff.html" class="active">Staff</a>
+            <a href="staff.html">Staff</a>
             <a href="announcements.html">Announcements</a>
             <a href="contact.html">Contact</a>
         </div>
@@ -316,7 +244,7 @@
         <a href="index.html">Home</a>
         <a href="about.html">About</a>
         <a href="question-papers.html">Question Papers</a>
-        <a href="staff.html" class="active">Staff</a>
+        <a href="staff.html">Staff</a>
         <a href="announcements.html">Announcements</a>
         <a href="contact.html">Contact</a>
         <div style="margin-top:12px">
@@ -347,110 +275,99 @@
         <div style="color:#9aa4b2;font-size:14px">
             Sir. M.V. Government Science College, Bommanakatte, Bhadravathi - 577302
         </div>
-        <div style="display:flex;gap:12px;align-items:center" id="footer-email">
-            <!-- Email button will be populated by JavaScript -->
-        </div>
+        <div style="display:flex;gap:12px;align-items:center" id="footer-email"></div>
     </div>
 </footer>
 
 <script src='assets/main.js'></script>
+
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const staffGridContainer = document.getElementById('staff-grid-container');
-        const jsonPath = 'content/data.json';
+document.addEventListener('DOMContentLoaded', () => {
+    const staffGridContainer = document.getElementById('staff-grid-container');
+    const jsonPath = 'content/data.json';
 
-        // Load dynamic footer content
-        async function loadFooterContent() {
-            try {
-                const response = await fetch('content/data.json');
-                if (!response.ok) return;
-                
-                const siteData = await response.json();
-                if (!siteData || !siteData.footer) return;
+    // Load footer content
+    async function loadFooterContent() {
+        try {
+            const response = await fetch('content/data.json');
+            if (!response.ok) return;
+            const siteData = await response.json();
+            if (!siteData.footer) return;
 
-                const footer = siteData.footer;
-                
-                // Update email in drawer menu
-                const emailBtn = document.querySelector('.drawer-menu .email-btn');
-                if (emailBtn && footer.primary_email) {
-                    emailBtn.href = `mailto:${footer.primary_email}`;
-                    emailBtn.textContent = `Email: ${footer.primary_email}`;
-                }
-
-                // Update email in footer
-                const footerEmailContainer = document.getElementById('footer-email');
-                if (footerEmailContainer && footer.primary_email) {
-                    footerEmailContainer.innerHTML = `
-                        <a class="email-btn" href="mailto:${footer.primary_email}" aria-label="Email">Email Us</a>
-                    `;
-                }
-            } catch (error) {
-                console.error('Error loading footer content:', error);
-                // Fallback to default email
-                const footerEmailContainer = document.getElementById('footer-email');
-                if (footerEmailContainer) {
-                    footerEmailContainer.innerHTML = `
-                        <a class="email-btn" href="mailto:sirmvsciencebdvt@gmail.com" aria-label="Email">Email Us</a>
-                    `;
-                }
+            const footer = siteData.footer;
+            const emailBtn = document.querySelector('.drawer-menu .email-btn');
+            if (emailBtn && footer.primary_email) {
+                emailBtn.href = `mailto:${footer.primary_email}`;
+                emailBtn.textContent = `Email: ${footer.primary_email}`;
             }
+
+            const footerEmailContainer = document.getElementById('footer-email');
+            if (footerEmailContainer && footer.primary_email) {
+                footerEmailContainer.innerHTML = `
+                    <a class="email-btn" href="mailto:${footer.primary_email}" aria-label="Email">Email Us</a>
+                `;
+            }
+        } catch {
+            const fallback = document.getElementById('footer-email');
+            if (fallback)
+                fallback.innerHTML = `<a class="email-btn" href="mailto:sirmvsciencebdvt@gmail.com">Email Us</a>`;
         }
+    }
 
-        // Fetch staff data
-        fetch(jsonPath)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                const staffData = data.staff;
-
-                staffGridContainer.innerHTML = '';
-
-                if (!staffData || staffData.length === 0) {
-                    staffGridContainer.innerHTML = '<div class="loading-message">No staff members found.</div>';
-                    return;
-                }
-
-                // Create staff cards
-                staffData.forEach(member => {
-                    // Use a placeholder image if 'image' field is missing or empty
-                    const imageSrc = member.image && member.image.trim() !== '' 
-                        ? member.image 
-                        : 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face';
-                    
-                    const card = document.createElement('div');
-                    card.classList.add('staff-card');
-                    
-                    card.innerHTML = `
-                        <div class="staff-card-img-wrap">
-                            <img src="${imageSrc}" alt="${member.name}" onerror="this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face'">
-                        </div>
-                        <div class="staff-name">${member.name}</div>
-                        <div class="staff-designation">${member.role}</div>
-                        
-                        <div class="staff-contact-info">
-                            ${member.email ? `<a href="mailto:${member.email}" class="staff-email">${member.email}</a>` : ''}
-                            ${member.phone ? `<div class="staff-phone">📞 ${member.phone}</div>` : ''}
-                        </div>
-                    `;
-                    
-                    staffGridContainer.appendChild(card);
-                });
-
-                // Load footer content after staff data is loaded
-                loadFooterContent();
-            })
-            .catch(e => {
-                console.error('Error fetching staff data:', e);
-                staffGridContainer.innerHTML = '<div class="loading-message" style="color: #ef4444;">Failed to load staff data. Please check your internet connection.</div>';
-                
-                // Still try to load footer content even if staff data fails
-                loadFooterContent();
+    // Fetch staff data
+    fetch(jsonPath)
+        .then(r => r.json())
+        .then(data => {
+            const staffData = data.staff;
+            staffGridContainer.innerHTML = '';
+            if (!staffData?.length) {
+                staffGridContainer.innerHTML = '<div class="loading-message">No staff members found.</div>';
+                return;
+            }
+            staffData.forEach(member => {
+                const img = member.image?.trim()
+                    ? member.image
+                    : 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face';
+                const card = document.createElement('div');
+                card.classList.add('staff-card');
+                card.innerHTML = `
+                    <div class="staff-card-img-wrap">
+                        <img src="${img}" alt="${member.name}">
+                    </div>
+                    <div class="staff-name">${member.name}</div>
+                    <div class="staff-designation">${member.role}</div>
+                    <div class="staff-contact-info">
+                        ${member.email ? `<a href="mailto:${member.email}" class="staff-email">${member.email}</a>` : ''}
+                        ${member.phone ? `<div class="staff-phone">📞 ${member.phone}</div>` : ''}
+                    </div>`;
+                staffGridContainer.appendChild(card);
             });
-    });
+            loadFooterContent();
+        })
+        .catch(() => {
+            staffGridContainer.innerHTML = '<div class="loading-message" style="color:#ef4444;">Failed to load staff data.</div>';
+            loadFooterContent();
+        });
+});
 </script>
+
+<!-- ✅ FIX: Universal Active Link Highlighter -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+  const currentPage = currentPath.endsWith('/') ? 'index.html' : currentPath;
+
+  document.querySelectorAll('.nav a, .drawer-menu a').forEach(link => {
+    const linkPath = link.getAttribute('href');
+    if (
+      linkPath === currentPage ||
+      (window.location.pathname.endsWith('/staff') && linkPath === 'staff.html')
+    ) {
+      link.classList.add('active');
+    }
+  });
+});
+</script>
+
 </body>
 </html>
