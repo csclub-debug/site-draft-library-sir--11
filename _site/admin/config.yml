@@ -66,6 +66,15 @@ collections:
               - { label: "Tagline / Description", name: "tagline", widget: "string" }
               - { label: "External URL", name: "link", widget: "string", hint: "Must start with http:// or https://" }
 
+          - label: "Footer & Social Media"
+            name: "footer"
+            widget: "object"
+            fields:
+              - { label: "Primary Email", name: "primary_email", widget: "string", required: false }
+              - { label: "Facebook URL", name: "facebook_url", widget: "string", required: false }
+              - { label: "Instagram URL", name: "instagram_url", widget: "string", required: false }
+              - { label: "Twitter URL", name: "twitter_url", widget: "string", required: false }
+
   # 2) QUESTION PAPERS (content/qpapers.json) - FIXED
   - name: "qpapers"
     label: "Question Papers"

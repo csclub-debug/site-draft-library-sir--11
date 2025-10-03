@@ -74,5 +74,11 @@
       "tagline": "Full-text scientific, technical, and medical content.",
       "link": "https://www.sciencedirect.com/"
     }
-  ]
+  ],
+  "footer": {
+    "primary_email": "sirmvsciencebdvt@gmail.com",
+    "facebook_url": "https://facebook.com/yourpage",
+    "instagram_url": "https://instagram.com/yourprofile", 
+    "twitter_url": "https://twitter.com/yourhandle"
+  }
 }
